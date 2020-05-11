@@ -22,14 +22,13 @@ line = (200, 230, 255)
 bg = (40, 40, 40)
 width = 600  # Width of the window
 height = 700
-
-
+snooz_time = 100
 
 window = pygame.display.set_mode((width, height))  # Creating the window
 pygame.display.set_caption('Alarm')  # Title of the window
 
 
-class button():
+class button:
     def __init__(self, color, x, y, width, height, text=''):
         self.color = color
         self.x = x
@@ -47,7 +46,8 @@ class button():
         if self.text != '':
             font = pygame.font.SysFont('keraleeyam', 30)
             text = font.render(self.text, 1, (0, 0, 0))
-            win.blit(text, (self.x + (self.width // 2  - text.get_width() // 2), self.y + 3 + (self.height // 2 - text.get_height() // 2)))
+            win.blit(text, (self.x + (self.width // 2 - text.get_width() // 2),
+                            self.y + 3 + (self.height // 2 - text.get_height() // 2)))
 
     def isOver(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.width:
@@ -209,49 +209,45 @@ class set_alarm:
         self.add_hr.set_colorkey(white)
         self.sub_hr = pygame.image.load('images/arrdw.png')
         self.sub_hr.set_colorkey(white)
-        self.add_hr_x = 85 - self.add_hr.get_width()//2
-        self.add_hr_y = y - self.add_hr.get_height()//2
-        self.sub_hr_x = 85 - self.sub_hr.get_width()//2
-        self.sub_hr_y = y + 100 - self.sub_hr.get_height()//2
+        self.add_hr_x = 85 - self.add_hr.get_width() // 2
+        self.add_hr_y = y - self.add_hr.get_height() // 2
+        self.sub_hr_x = 85 - self.sub_hr.get_width() // 2
+        self.sub_hr_y = y + 100 - self.sub_hr.get_height() // 2
 
         self.add_min = pygame.image.load('images/arrup.png')
         self.add_min.set_colorkey(white)
         self.sub_min = pygame.image.load('images/arrdw.png')
         self.sub_min.set_colorkey(white)
-        self.add_min_x = 225 - self.add_min.get_width()//2
-        self.add_min_y = y - self.add_min.get_height()//2
-        self.sub_min_x = 225 - self.sub_min.get_width()//2
-        self.sub_min_y = y + 100 - self.sub_min.get_height()//2
+        self.add_min_x = 225 - self.add_min.get_width() // 2
+        self.add_min_y = y - self.add_min.get_height() // 2
+        self.sub_min_x = 225 - self.sub_min.get_width() // 2
+        self.sub_min_y = y + 100 - self.sub_min.get_height() // 2
 
         self.ampm_up = pygame.image.load('images/arrup.png')
         self.ampm_up.set_colorkey(white)
         self.ampm_dw = pygame.image.load('images/arrdw.png')
         self.ampm_dw.set_colorkey(white)
-        self.ampm_up_x = 365 - self.ampm_up.get_width()//2
-        self.ampm_up_y = y - self.ampm_up.get_height()//2
-        self.ampm_dw_x = 365 - self.ampm_dw.get_width()//2
-        self.ampm_dw_y = y + 100 - self.ampm_dw.get_height()//2
-
+        self.ampm_up_x = 365 - self.ampm_up.get_width() // 2
+        self.ampm_up_y = y - self.ampm_up.get_height() // 2
+        self.ampm_dw_x = 365 - self.ampm_dw.get_width() // 2
+        self.ampm_dw_y = y + 100 - self.ampm_dw.get_height() // 2
 
         self.hrs_font = pygame.font.SysFont('ubuntu', 50)
         self.hrs_text = self.hrs_font.render('', True, green, bg)
         self.hrs_textRect = self.hrs_text.get_rect()
-        self.hrs_textRect.center = 60 - self.hrs_text.get_width()//2, y + 22 + self.hrs_text.get_height() // 2
-
+        self.hrs_textRect.center = 60 - self.hrs_text.get_width() // 2, y + 22 + self.hrs_text.get_height() // 2
 
         self.min_font = pygame.font.SysFont('ubuntu', 50)
         self.min_text = self.min_font.render('', True, green, bg)
         self.min_textRect = self.min_text.get_rect()
         self.min_textRect.center = 195 - self.min_text.get_width() // 2, y + 22 + self.min_text.get_height() // 2
 
-
         self.ampm_font = pygame.font.SysFont('ubuntu', 50)
         self.ampm_text = self.ampm_font.render('', True, green, bg)
         self.ampm_textRect = self.ampm_text.get_rect()
         self.ampm_textRect.center = 325 - self.ampm_text.get_width() // 2, y + 22 + self.ampm_text.get_height() // 2
 
-        self.set_button = button((200, 200, 200), width - 150,  80, 120, 40, 'Set Alarm')
-
+        self.set_button = button((200, 200, 200), width - 150, 80, 120, 40, 'Set Alarm')
 
     def action(self, button):
 
@@ -282,7 +278,6 @@ class set_alarm:
         if button == 'ampm_up' or button == 'ampm_dw':
             self.ampm = 'AM' if self.ampm == 'PM' else 'PM'
 
-
     def isOver(self, pos):
         if self.add_hr_x < pos[0] < self.add_hr_x + self.add_hr.get_width():
             if pos[1] > self.add_hr_y and pos[1] < self.add_hr_y + self.add_hr.get_height():
@@ -291,14 +286,12 @@ class set_alarm:
             if pos[1] > self.sub_hr_y and pos[1] < self.sub_hr_y + self.sub_hr.get_height():
                 return 'sub_hr'
 
-
         if self.add_min_x < pos[0] < self.add_min_x + self.add_hr.get_width():
             if pos[1] > self.add_min_y and pos[1] < self.add_min_y + self.add_min.get_height():
                 return 'add_min'
         if self.sub_min_x < pos[0] < self.sub_min_x + self.sub_min.get_width():
             if pos[1] > self.sub_min_y and pos[1] < self.sub_min_y + self.sub_min.get_height():
                 return 'sub_min'
-
 
         if self.ampm_up_x < pos[0] < self.ampm_up_x + self.ampm_up.get_width():
             if pos[1] > self.ampm_up_y and pos[1] < self.ampm_up_y + self.ampm_up.get_height():
@@ -331,19 +324,63 @@ class alarm:
         self.alarm_textRect.center = 200 - self.alarm_text.get_width() // 2, y + 25 - self.alarm_text.get_height() // 2
 
     def ring_alarm(self, tone):
+        def snooz():
+            snooz_hrs = snooz_time // 60
+            snooz_min = snooz_time % 60
+            if snooz_min + self.minutes > 60:
+                self.minutes += snooz_min - 60
+                self.hours += 1
+
+            if snooz_hrs + self.hours > 12:
+                self.hours += snooz_hrs - 12
+                if self.ampm == 'AM':
+                    self.ampm = 'PM'
+                else:
+                    self.ampm = 'AM'
+
+            self.isActive = True
+            self.sw_image = self.on_sw_image if self.isActive else self.off_sw_image
+            root.destroy()
+
+        def quit():
+            root.destroy()
+
         root = tk.Tk()
         pygame.mixer.Sound.play(tone)
-        canvas = tk.Canvas(root, height=300, width=300)
+        canvas = tk.Canvas(root, height=250, width=300, bg='#282828')
+        alarm_label = tk.Label(canvas, text="ALARM", font=('ubuntu', 60), bg='#282828', fg='#C8E6FF')
+        time_label = tk.Label(canvas, text="%02d:%02d %s" % (self.hours, self.minutes, self.ampm), font=('ubuntu', 40),
+                              bg='#282828', fg='#C8E6FF')
+        snooz_button = tk.Button(canvas, text="Snooz %d min" % (snooz_time), font=('verdana', 15),
+                                 activebackground="#666699",
+                                 bg='#9793F5', command=lambda: snooz())
+        close_button = tk.Button(canvas, text="Close", font=('verdana', 15), activebackground="#666699", bg='#9793F5',
+                                 command=lambda: quit())
         canvas.pack()
+        alarm_label.place(y=1, x=15)
+        time_label.place(y=100, x=35)
+        snooz_button.place(y=190, x=10)
+        close_button.place(y=190, x=200)
         root.mainloop()
         pygame.mixer.Sound.stop(tone)
 
+        alarm_data = {
+            "alarm1": [alarm1.hours, alarm1.minutes, alarm1.ampm, alarm1.isActive],
+            "alarm2": [alarm2.hours, alarm2.minutes, alarm2.ampm, alarm2.isActive],
+            "alarm3": [alarm3.hours, alarm3.minutes, alarm3.ampm, alarm3.isActive],
+            "alarm4": [alarm4.hours, alarm4.minutes, alarm4.ampm, alarm4.isActive],
+            "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
+        }
+
+        pickle_out = open("alarm_data.pickle", "wb")
+        pickle.dump(alarm_data, pickle_out)
+        pickle_out.close()
+
     def comparison(self, sys_hrs, sys_min, sys_ampn):
         if self.hours == sys_hrs and self.minutes == sys_min and self.ampm == sys_ampn and self.isActive:
-            self.ring_alarm(tone)
             self.isActive = False
+            self.ring_alarm(tone)
             self.sw_image = self.on_sw_image if self.isActive else self.off_sw_image
-
 
     def isOverSW(self, pos):
         if self.sw_x < pos[0] < self.sw_x + self.sw_image.get_width():
@@ -373,6 +410,7 @@ class alarm:
                 return True
         return False
 
+
 time = datetime.datetime.now()
 sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour <= 12 else 'PM'
 
@@ -401,10 +439,10 @@ while True:
     window.blit(set_alarm_obj.ampm_up, (set_alarm_obj.ampm_up_x, set_alarm_obj.ampm_up_y))
     window.blit(set_alarm_obj.ampm_dw, (set_alarm_obj.ampm_dw_x, set_alarm_obj.ampm_dw_y))
 
-    set_alarm_hrs = set_alarm_obj.hrs_font.render("%02d" % (set_alarm_obj.hrs), True, line, bg)
+    set_alarm_hrs = set_alarm_obj.hrs_font.render("%02d" % set_alarm_obj.hrs, True, line, bg)
     window.blit(set_alarm_hrs, set_alarm_obj.hrs_textRect)
 
-    set_alarm_min = set_alarm_obj.min_font.render("%02d" % (set_alarm_obj.min), True, line, bg)
+    set_alarm_min = set_alarm_obj.min_font.render("%02d" % set_alarm_obj.min, True, line, bg)
     window.blit(set_alarm_min, set_alarm_obj.min_textRect)
 
     set_alarm_ampm = set_alarm_obj.ampm_font.render(set_alarm_obj.ampm, True, line, bg)
@@ -445,14 +483,12 @@ while True:
     alarm4.comparison(sys_hrs, sys_min, ampm)
     alarm5.comparison(sys_hrs, sys_min, ampm)
 
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
 
         pos = pygame.mouse.get_pos()
-
 
         if event.type == pygame.MOUSEMOTION:
             if set_alarm_obj.set_button.isOver(pos):
@@ -495,6 +531,5 @@ while True:
 
             if alarm5.isOverRST(pos):
                 reset('alarm5')
-
 
     pygame.display.update()
