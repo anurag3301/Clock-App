@@ -4,15 +4,26 @@ import tkinter as tk
 import pickle
 
 pygame.init()
-hope = pygame.mixer.Sound("tones/sound.wav")
-back_home = pygame.mixer.Sound("tones/back.wav")
-carbin = pygame.mixer.Sound("tones/carbin.wav")
-eptic = pygame.mixer.Sound("tones/eptic.wav")
-moon = pygame.mixer.Sound("tones/moon.wav")
-watch = pygame.mixer.Sound("tones/watch.wav")
-wistle = pygame.mixer.Sound("tones/wistle.wav")
+def tone_return(sno):
+    if sno == 1:
+        return  pygame.mixer.Sound("tones/sound.wav")
+    elif sno == 2:
+        return  pygame.mixer.Sound("tones/back.wav")
+    elif sno == 3:
+        return pygame.mixer.Sound("tones/carbin.wav")
+    elif sno == 4:
+        return pygame.mixer.Sound("tones/eptic.wav")
+    elif sno == 5:
+        return pygame.mixer.Sound("tones/moon.wav")
+    elif sno == 6:
+        return pygame.mixer.Sound("tones/watch.wav")
+    elif sno ==7:
+        return pygame.mixer.Sound("tones/wistle.wav")
 
-tone = watch
+pickle_in = open("alarm_prop.pickle", "rb")
+alarm_prop = pickle.load(pickle_in)
+pickle_in.close()
+current_tone = tone_return(alarm_prop['tone_number'])
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -22,10 +33,153 @@ line = (200, 230, 255)
 bg = (40, 40, 40)
 width = 600  # Width of the window
 height = 700
-snooz_time = 100
 
 window = pygame.display.set_mode((width, height))  # Creating the window
 pygame.display.set_caption('Alarm')  # Title of the window
+
+
+def setting():
+    global current_tone
+    pickle_in = open("alarm_prop.pickle", "rb")
+    alarm_prop = pickle.load(pickle_in)
+    pickle_in.close()
+
+    root = tk.Tk()
+    root.title("Settings")
+    root.geometry("400x500+700+100")
+    canvas = tk.Canvas(root, height=500, width=400, bg='#282828')
+    tone_number = tk.IntVar(canvas, alarm_prop['tone_number'])
+    snooz_val = tk.IntVar(canvas, value=alarm_prop['snooz_time'])
+    x = 50
+
+    def play_tone(tone, sno):
+        pygame.mixer.Sound.stop(tone1.tone)
+        pygame.mixer.Sound.stop(tone2.tone)
+        pygame.mixer.Sound.stop(tone3.tone)
+        pygame.mixer.Sound.stop(tone4.tone)
+        pygame.mixer.Sound.stop(tone5.tone)
+        pygame.mixer.Sound.stop(tone6.tone)
+        pygame.mixer.Sound.stop(tone7.tone)
+
+        tone1.button_state = False
+        tone2.button_state = False
+        tone3.button_state = False
+        tone4.button_state = False
+        tone5.button_state = False
+        tone6.button_state = False
+        tone7.button_state = False
+
+        if sno == 1:
+            tone1.button_state = True
+        if sno == 2:
+            tone2.button_state = True
+        if sno == 3:
+            tone3.button_state = True
+        if sno == 4:
+            tone4.button_state = True
+        if sno == 5:
+            tone5.button_state = True
+        if sno == 6:
+            tone6.button_state = True
+        if sno == 7:
+            tone7.button_state = True
+
+        if not tone1.button_state:
+            tone1.play_stop_tone()
+        if not tone2.button_state:
+            tone2.play_stop_tone()
+        if not tone3.button_state:
+            tone3.play_stop_tone()
+        if not tone4.button_state:
+            tone4.play_stop_tone()
+        if not tone5.button_state:
+            tone5.play_stop_tone()
+        if not tone6.button_state:
+            tone6.play_stop_tone()
+        if not tone7.button_state:
+            tone7.play_stop_tone()
+
+        if sno == 1:
+            tone1.button_state = False
+        if sno == 2:
+            tone2.button_state = False
+        if sno == 3:
+            tone3.button_state = False
+        if sno == 4:
+            tone4.button_state = False
+        if sno == 5:
+            tone5.button_state = False
+        if sno == 6:
+            tone6.button_state = False
+        if sno == 7:
+            tone7.button_state = False
+        pygame.mixer.Sound.play(tone)
+
+    class tone:
+        def __init__(self, sno, y, path, name):
+            self.tone = pygame.mixer.Sound(path)
+            self.sno = sno
+            self.name = name
+            self.x = 2
+            self.y = y
+            self.button_state = True
+            self.play_img = tk.PhotoImage(file="images/speaker.png")
+            self.play = tk.Button(root, image=self.play_img, command=lambda: self.play_stop_tone())
+            self.play.place(x=self.x + 150, y=self.y)
+            self.stop_img = tk.PhotoImage(file="images/stop.png")
+
+        def play_stop_tone(self):
+            if self.button_state:
+                self.stop = tk.Button(root, image=self.stop_img, command=lambda: self.play_stop_tone())
+                self.stop.place(x=self.x + 150, y=self.y)
+                self.button_state = not self.button_state
+                play_tone(self.tone, self.sno)
+            else:
+                self.play = tk.Button(root, image=self.play_img, command=lambda: self.play_stop_tone())
+                self.play.place(x=self.x + 150, y=self.y)
+                self.button_state = not self.button_state
+                pygame.mixer.Sound.stop(self.tone)
+
+    def ok(snooz_time, tone):
+        global current_tone
+        alarm_prop = {"snooz_time": snooz_time, "tone_number": tone, }
+        pickle_out = open("alarm_prop.pickle", "wb")
+        pickle.dump(alarm_prop, pickle_out)
+        pickle_out.close()
+        current_tone = tone_return(alarm_prop['tone_number'])
+        root.destroy()
+
+    tone1 = tone(1, x + 30 * 0, "tones/sound.wav", 'Hope')
+    tone2 = tone(2, x + 30 * 1, "tones/back.wav", 'Back Home')
+    tone3 = tone(3, x + 30 * 2, "tones/carbin.wav", 'Carbin')
+    tone4 = tone(4, x + 30 * 3, "tones/eptic.wav", 'The End')
+    tone5 = tone(5, x + 30 * 4, "tones/moon.wav", 'Moon Love')
+    tone6 = tone(6, x + 30 * 5, "tones/watch.wav", 'Watch This')
+    tone7 = tone(7, x + 30 * 6, "tones/wistle.wav", 'Wistle War')
+
+    tones = {tone1.name: [tone1.y, 1],
+             tone2.name: [tone2.y, 2],
+             tone3.name: [tone3.y, 3],
+             tone4.name: [tone4.y, 4],
+             tone5.name: [tone5.y, 5],
+             tone6.name: [tone6.y, 6],
+             tone7.name: [tone7.y, 7]
+             }
+    song_label = tk.Label(canvas, text="Select Tone", font=('ubuntu', 25), bg='#282828', fg='#0099cc').place(x=7, y=1)
+    snooz_label = tk.Label(canvas, text="Snooz\nDuration", font=('ubuntu', 15), bg='#282828', fg='#C8E6FF').place(x=220,
+                                                                                                                  y=150)
+    snooz_entry = tk.Entry(canvas, text='45', width=3, textvariable=snooz_val, font=('ubuntu', 15)).place(x=315, y=160)
+    min_label = tk.Label(canvas, text="min", font=('ubuntu', 15), bg='#282828', fg='#C8E6FF').place(x=360, y=160)
+
+    ok_button = tk.Button(canvas, text="OK", font=('ubuntu', 20),
+                          command=lambda: ok(snooz_val.get(), tone_number.get())).place(x=320, y=440)
+    for (text, value) in tones.items():
+        tk.Radiobutton(canvas, text=text, variable=tone_number, font=('ubuntu', 15), bg='#282828', fg='#0099cc',
+                       activeforeground='#C8E6FF', activebackground='#282828', highlightthickness=0,
+                       value=value[1]).place(y=value[0], x=2)
+    canvas.pack()
+    root.mainloop()
+
 
 
 class button:
@@ -93,8 +247,6 @@ def set_alarm_trig():
         alarm5.isActive = True
         alarm5.sw_image = alarm5.on_sw_image if alarm5.isActive else alarm5.off_sw_image
 
-    else:
-        print("nonEmpty")
 
     alarm_data = {
         "alarm1": [alarm1.hours, alarm1.minutes, alarm1.ampm, alarm1.isActive],
@@ -165,8 +317,6 @@ def reset(alarm_name):
         alarm5.hours = 0
         alarm5.minutes = 0
         alarm5.ampm = 'AM'
-    else:
-        None
 
     if alarm1.hours == 0 and alarm1.minutes == 0:
         alarm1.isActive = False
@@ -324,7 +474,7 @@ class alarm:
         self.alarm_textRect.center = 200 - self.alarm_text.get_width() // 2, y + 25 - self.alarm_text.get_height() // 2
 
     def ring_alarm(self, tone):
-        def snooz():
+        def snooz(snooz_time):
             snooz_hrs = snooz_time // 60
             snooz_min = snooz_time % 60
             if snooz_min + self.minutes > 60:
@@ -346,14 +496,20 @@ class alarm:
             root.destroy()
 
         root = tk.Tk()
+        root.geometry("300x250+700+100")
+
         pygame.mixer.Sound.play(tone)
+        pickle_in = open("alarm_prop.pickle", "rb")
+        alarm_prop = pickle.load(pickle_in)
+        pickle_in.close()
+        snooz_time = alarm_prop['snooz_time']
         canvas = tk.Canvas(root, height=250, width=300, bg='#282828')
         alarm_label = tk.Label(canvas, text="ALARM", font=('ubuntu', 60), bg='#282828', fg='#C8E6FF')
         time_label = tk.Label(canvas, text="%02d:%02d %s" % (self.hours, self.minutes, self.ampm), font=('ubuntu', 40),
                               bg='#282828', fg='#C8E6FF')
         snooz_button = tk.Button(canvas, text="Snooz %d min" % (snooz_time), font=('verdana', 15),
                                  activebackground="#666699",
-                                 bg='#9793F5', command=lambda: snooz())
+                                 bg='#9793F5', command=lambda: snooz(snooz_time))
         close_button = tk.Button(canvas, text="Close", font=('verdana', 15), activebackground="#666699", bg='#9793F5',
                                  command=lambda: quit())
         canvas.pack()
@@ -379,7 +535,7 @@ class alarm:
     def comparison(self, sys_hrs, sys_min, sys_ampn):
         if self.hours == sys_hrs and self.minutes == sys_min and self.ampm == sys_ampn and self.isActive:
             self.isActive = False
-            self.ring_alarm(tone)
+            self.ring_alarm(current_tone)
             self.sw_image = self.on_sw_image if self.isActive else self.off_sw_image
 
     def isOverSW(self, pos):
@@ -412,7 +568,7 @@ class alarm:
 
 
 time = datetime.datetime.now()
-sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour <= 12 else 'PM'
+sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
 
 set_alarm_obj = set_alarm(50, sys_hrs, sys_min, ampm)
 
@@ -427,7 +583,7 @@ alarm5 = alarm(alarm_data['alarm5'][0], alarm_data['alarm5'][1], alarm_data['ala
 
 while True:
     time = datetime.datetime.now()
-    sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour <= 12 else 'PM'
+    sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
     window.fill(bg)
 
     window.blit(set_alarm_obj.add_hr, (set_alarm_obj.add_hr_x, set_alarm_obj.add_hr_y))
@@ -483,6 +639,11 @@ while True:
     alarm4.comparison(sys_hrs, sys_min, ampm)
     alarm5.comparison(sys_hrs, sys_min, ampm)
 
+    setting_img= pygame.image.load('images/setting.png')
+    setting_img.set_colorkey(white)
+    setting_x, setting_y = 550 - setting_img.get_width() // 2, 30 - setting_img.get_height() // 2
+    window.blit(setting_img, (setting_x, setting_y))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -531,5 +692,9 @@ while True:
 
             if alarm5.isOverRST(pos):
                 reset('alarm5')
+
+            if pos[0] > setting_x and pos[0] < setting_x + setting_img.get_width():
+                if pos[1] > setting_y and pos[1] < setting_y + setting_img.get_height():
+                    setting()
 
     pygame.display.update()
