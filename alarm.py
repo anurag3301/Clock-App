@@ -19,6 +19,18 @@ def tone_return(sno):
         return pygame.mixer.Sound("tones/watch.wav")
     elif sno ==7:
         return pygame.mixer.Sound("tones/wistle.wav")
+    elif sno ==8:
+        return pygame.mixer.Sound("tones/follow.wav")
+    elif sno ==9:
+        return pygame.mixer.Sound("tones/propaganda.wav")
+    elif sno ==10:
+        return pygame.mixer.Sound("tones/ride it.wav")
+    elif sno ==11:
+        return pygame.mixer.Sound("tones/start.wav")
+    elif sno ==12:
+        return pygame.mixer.Sound("tones/suns.wav")
+    elif sno ==13:
+        return pygame.mixer.Sound("tones/xilla.wav")
 
 pickle_in = open("alarm_prop.pickle", "rb")
 alarm_prop = pickle.load(pickle_in)
@@ -60,6 +72,12 @@ def setting():
         pygame.mixer.Sound.stop(tone5.tone)
         pygame.mixer.Sound.stop(tone6.tone)
         pygame.mixer.Sound.stop(tone7.tone)
+        pygame.mixer.Sound.stop(tone8.tone)
+        pygame.mixer.Sound.stop(tone9.tone)
+        pygame.mixer.Sound.stop(tone10.tone)
+        pygame.mixer.Sound.stop(tone11.tone)
+        pygame.mixer.Sound.stop(tone12.tone)
+        pygame.mixer.Sound.stop(tone13.tone)
 
         tone1.button_state = False
         tone2.button_state = False
@@ -68,6 +86,12 @@ def setting():
         tone5.button_state = False
         tone6.button_state = False
         tone7.button_state = False
+        tone8.button_state = False
+        tone9.button_state = False
+        tone10.button_state = False
+        tone11.button_state = False
+        tone12.button_state = False
+        tone13.button_state = False
 
         if sno == 1:
             tone1.button_state = True
@@ -83,6 +107,18 @@ def setting():
             tone6.button_state = True
         if sno == 7:
             tone7.button_state = True
+        if sno == 8:
+            tone8.button_state = True
+        if sno == 9:
+            tone9.button_state = True
+        if sno == 10:
+            tone10.button_state = True
+        if sno == 11:
+            tone11.button_state = True
+        if sno == 12:
+            tone12.button_state = True
+        if sno == 13:
+            tone13.button_state = True
 
         if not tone1.button_state:
             tone1.play_stop_tone()
@@ -98,6 +134,18 @@ def setting():
             tone6.play_stop_tone()
         if not tone7.button_state:
             tone7.play_stop_tone()
+        if not tone8.button_state:
+            tone8.play_stop_tone()
+        if not tone9.button_state:
+            tone9.play_stop_tone()
+        if not tone10.button_state:
+            tone10.play_stop_tone()
+        if not tone11.button_state:
+            tone11.play_stop_tone()
+        if not tone12.button_state:
+            tone12.play_stop_tone()
+        if not tone13.button_state:
+            tone13.play_stop_tone()
 
         if sno == 1:
             tone1.button_state = False
@@ -113,6 +161,19 @@ def setting():
             tone6.button_state = False
         if sno == 7:
             tone7.button_state = False
+        if sno == 8:
+            tone8.button_state = False
+        if sno == 9:
+            tone9.button_state = False
+        if sno == 10:
+            tone10.button_state = False
+        if sno == 11:
+            tone11.button_state = False
+        if sno == 12:
+            tone12.button_state = False
+        if sno == 13:
+            tone13.button_state = False
+
         pygame.mixer.Sound.play(tone)
 
     class tone:
@@ -125,18 +186,18 @@ def setting():
             self.button_state = True
             self.play_img = tk.PhotoImage(file="images/speaker.png")
             self.play = tk.Button(root, image=self.play_img, command=lambda: self.play_stop_tone())
-            self.play.place(x=self.x + 150, y=self.y)
+            self.play.place(x=self.x + 160, y=self.y)
             self.stop_img = tk.PhotoImage(file="images/stop.png")
 
         def play_stop_tone(self):
             if self.button_state:
                 self.stop = tk.Button(root, image=self.stop_img, command=lambda: self.play_stop_tone())
-                self.stop.place(x=self.x + 150, y=self.y)
+                self.stop.place(x=self.x + 160, y=self.y)
                 self.button_state = not self.button_state
                 play_tone(self.tone, self.sno)
             else:
                 self.play = tk.Button(root, image=self.play_img, command=lambda: self.play_stop_tone())
-                self.play.place(x=self.x + 150, y=self.y)
+                self.play.place(x=self.x + 160, y=self.y)
                 self.button_state = not self.button_state
                 pygame.mixer.Sound.stop(self.tone)
 
@@ -149,6 +210,20 @@ def setting():
         current_tone = tone_return(alarm_prop['tone_number'])
         root.destroy()
 
+        pygame.mixer.Sound.stop(tone1.tone)
+        pygame.mixer.Sound.stop(tone2.tone)
+        pygame.mixer.Sound.stop(tone3.tone)
+        pygame.mixer.Sound.stop(tone4.tone)
+        pygame.mixer.Sound.stop(tone5.tone)
+        pygame.mixer.Sound.stop(tone6.tone)
+        pygame.mixer.Sound.stop(tone7.tone)
+        pygame.mixer.Sound.stop(tone8.tone)
+        pygame.mixer.Sound.stop(tone9.tone)
+        pygame.mixer.Sound.stop(tone10.tone)
+        pygame.mixer.Sound.stop(tone11.tone)
+        pygame.mixer.Sound.stop(tone12.tone)
+        pygame.mixer.Sound.stop(tone13.tone)
+
     tone1 = tone(1, x + 30 * 0, "tones/sound.wav", 'Hope')
     tone2 = tone(2, x + 30 * 1, "tones/back.wav", 'Back Home')
     tone3 = tone(3, x + 30 * 2, "tones/carbin.wav", 'Carbin')
@@ -156,6 +231,12 @@ def setting():
     tone5 = tone(5, x + 30 * 4, "tones/moon.wav", 'Moon Love')
     tone6 = tone(6, x + 30 * 5, "tones/watch.wav", 'Watch This')
     tone7 = tone(7, x + 30 * 6, "tones/wistle.wav", 'Wistle War')
+    tone8 = tone(8, x + 30 * 7, "tones/follow.wav", 'Follow')
+    tone9 = tone(9, x + 30 * 8, "tones/propaganda.wav", 'Propaganda')
+    tone10 = tone(10, x + 30 * 9, "tones/ride it.wav", 'Ride It')
+    tone11 = tone(11, x + 30 * 10, "tones/start.wav", 'Start It Over')
+    tone12 = tone(12, x + 30 * 11, "tones/suns.wav", 'Suns Up')
+    tone13 = tone(13, x + 30 * 12, "tones/xilla.wav", 'XILLA!')
 
     tones = {tone1.name: [tone1.y, 1],
              tone2.name: [tone2.y, 2],
@@ -163,7 +244,13 @@ def setting():
              tone4.name: [tone4.y, 4],
              tone5.name: [tone5.y, 5],
              tone6.name: [tone6.y, 6],
-             tone7.name: [tone7.y, 7]
+             tone7.name: [tone7.y, 7],
+             tone8.name: [tone8.y, 8],
+             tone9.name: [tone9.y, 9],
+             tone10.name: [tone10.y, 10],
+             tone11.name: [tone11.y, 11],
+             tone12.name: [tone12.y, 12],
+             tone13.name: [tone13.y, 13],
              }
     song_label = tk.Label(canvas, text="Select Tone", font=('ubuntu', 25), bg='#282828', fg='#0099cc').place(x=7, y=1)
     snooz_label = tk.Label(canvas, text="Snooz\nDuration", font=('ubuntu', 15), bg='#282828', fg='#C8E6FF').place(x=220,
@@ -179,6 +266,20 @@ def setting():
                        value=value[1]).place(y=value[0], x=2)
     canvas.pack()
     root.mainloop()
+
+    pygame.mixer.Sound.stop(tone1.tone)
+    pygame.mixer.Sound.stop(tone2.tone)
+    pygame.mixer.Sound.stop(tone3.tone)
+    pygame.mixer.Sound.stop(tone4.tone)
+    pygame.mixer.Sound.stop(tone5.tone)
+    pygame.mixer.Sound.stop(tone6.tone)
+    pygame.mixer.Sound.stop(tone7.tone)
+    pygame.mixer.Sound.stop(tone8.tone)
+    pygame.mixer.Sound.stop(tone9.tone)
+    pygame.mixer.Sound.stop(tone10.tone)
+    pygame.mixer.Sound.stop(tone11.tone)
+    pygame.mixer.Sound.stop(tone12.tone)
+    pygame.mixer.Sound.stop(tone13.tone)
 
 
 
