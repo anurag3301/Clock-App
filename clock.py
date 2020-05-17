@@ -6,17 +6,17 @@ import math
 
 pygame.init()
 
-
 white = (255, 255, 255)
 black = (0, 0, 0)
 green = (0, 255, 0)
 red = (255, 0, 0)
 line = (200, 230, 255)
 bg = (40, 40, 40)
-width = 600  # Width of the window
+width = 600
 height = 700
 
 window = pygame.display.set_mode((width, height))
+
 
 class button():
     def __init__(self, color, text_color, x, y, width, height, text):
@@ -37,7 +37,8 @@ class button():
         if self.text != '':
             font = pygame.font.SysFont('keraleeyam', 30)
             text = font.render(self.text, 1, self.text_color)
-            win.blit(text, (self.x + (self.width // 2  - text.get_width() // 2), self.y + 3 + (self.height // 2 - text.get_height() // 2)))
+            win.blit(text, (self.x + (self.width // 2 - text.get_width() // 2),
+                            self.y + 3 + (self.height // 2 - text.get_height() // 2)))
 
     def isOver(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.width:
@@ -47,17 +48,17 @@ class button():
         return False
 
 
-clock_button =     button(bg, (200, 200, 200), 5,  0, 70, 30, ' Clock ')
-alarm_button =     button(bg, (200, 200, 200), 80, 0, 70, 30, ' Alarm ')
+clock_button = button(bg, (200, 200, 200), 5, 0, 70, 30, ' Clock ')
+alarm_button = button(bg, (200, 200, 200), 80, 0, 70, 30, ' Alarm ')
 stopwatch_button = button(bg, (200, 200, 200), 155, 0, 130, 30, ' Stop Watch ')
-timer_button =     button(bg, (200, 200, 200), 290, 0, 70, 30, ' Timer ')
+timer_button = button(bg, (200, 200, 200), 290, 0, 70, 30, ' Timer ')
 
 
 def tone_return(sno):
     if sno == 1:
-        return  pygame.mixer.Sound("tones/sound.wav")
+        return pygame.mixer.Sound("tones/sound.wav")
     elif sno == 2:
-        return  pygame.mixer.Sound("tones/back.wav")
+        return pygame.mixer.Sound("tones/back.wav")
     elif sno == 3:
         return pygame.mixer.Sound("tones/carbin.wav")
     elif sno == 4:
@@ -66,31 +67,31 @@ def tone_return(sno):
         return pygame.mixer.Sound("tones/moon.wav")
     elif sno == 6:
         return pygame.mixer.Sound("tones/watch.wav")
-    elif sno ==7:
+    elif sno == 7:
         return pygame.mixer.Sound("tones/wistle.wav")
-    elif sno ==8:
+    elif sno == 8:
         return pygame.mixer.Sound("tones/follow.wav")
-    elif sno ==9:
+    elif sno == 9:
         return pygame.mixer.Sound("tones/propaganda.wav")
-    elif sno ==10:
+    elif sno == 10:
         return pygame.mixer.Sound("tones/ride it.wav")
-    elif sno ==11:
+    elif sno == 11:
         return pygame.mixer.Sound("tones/start.wav")
-    elif sno ==12:
+    elif sno == 12:
         return pygame.mixer.Sound("tones/suns.wav")
-    elif sno ==13:
+    elif sno == 13:
         return pygame.mixer.Sound("tones/xilla.wav")
 
 
-pickle_in = open("alarm_prop.pickle", "rb")
+pickle_in = open("data/alarm_prop.pickle", "rb")
 alarm_prop = pickle.load(pickle_in)
 pickle_in.close()
 current_tone = tone_return(alarm_prop['tone_number'])
 
 
-def setting():
+def setting_window():
     global current_tone
-    pickle_in = open("alarm_prop.pickle", "rb")
+    pickle_in = open("data/alarm_prop.pickle", "rb")
     alarm_prop = pickle.load(pickle_in)
     pickle_in.close()
 
@@ -242,7 +243,7 @@ def setting():
     def ok(snooz_time, tone):
         global current_tone
         alarm_prop = {"snooz_time": snooz_time, "tone_number": tone, }
-        pickle_out = open("alarm_prop.pickle", "wb")
+        pickle_out = open("data/alarm_prop.pickle", "wb")
         pickle.dump(alarm_prop, pickle_out)
         pickle_out.close()
         current_tone = tone_return(alarm_prop['tone_number'])
@@ -356,7 +357,6 @@ def set_alarm_trig():
         alarm5.isActive = True
         alarm5.sw_image = alarm5.on_sw_image if alarm5.isActive else alarm5.off_sw_image
 
-
     alarm_data = {
         "alarm1": [alarm1.hours, alarm1.minutes, alarm1.ampm, alarm1.isActive],
         "alarm2": [alarm2.hours, alarm2.minutes, alarm2.ampm, alarm2.isActive],
@@ -365,7 +365,7 @@ def set_alarm_trig():
         "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
     }
 
-    pickle_out = open("alarm_data.pickle", "wb")
+    pickle_out = open("data/alarm_data.pickle", "wb")
     pickle.dump(alarm_data, pickle_out)
     pickle_out.close()
 
@@ -452,7 +452,7 @@ def reset(alarm_name):
         "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
     }
 
-    pickle_out = open("alarm_data.pickle", "wb")
+    pickle_out = open("data/alarm_data.pickle", "wb")
     pickle.dump(alarm_data, pickle_out)
     pickle_out.close()
 
@@ -496,6 +496,11 @@ class set_alarm:
         self.hrs_textRect = self.hrs_text.get_rect()
         self.hrs_textRect.center = 60 - self.hrs_text.get_width() // 2, y + 22 + self.hrs_text.get_height() // 2
 
+        self.colan_font = pygame.font.SysFont('ubuntu', 70)
+        self.colan_text = self.colan_font.render(':', True, green, bg)
+        self.colan_textRect = self.colan_text.get_rect()
+        self.colan_textRect.center = 160 - self.colan_text.get_width() // 2, y + 5 + self.colan_text.get_height() // 2
+
         self.min_font = pygame.font.SysFont('ubuntu', 50)
         self.min_text = self.min_font.render('', True, green, bg)
         self.min_textRect = self.min_text.get_rect()
@@ -506,7 +511,7 @@ class set_alarm:
         self.ampm_textRect = self.ampm_text.get_rect()
         self.ampm_textRect.center = 325 - self.ampm_text.get_width() // 2, y + 22 + self.ampm_text.get_height() // 2
 
-        self.set_button = button((200, 200, 200), (0, 0, 0), width - 150, y + 30 , 120, 40, 'Set Alarm')
+        self.set_button = button((200, 200, 200), (0, 0, 0), width - 150, y + 30, 120, 40, 'Set Alarm')
 
     def action(self, button):
 
@@ -637,7 +642,7 @@ class alarm:
             "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
         }
 
-        pickle_out = open("alarm_data.pickle", "wb")
+        pickle_out = open("data/alarm_data.pickle", "wb")
         pickle.dump(alarm_data, pickle_out)
         pickle_out.close()
 
@@ -665,7 +670,7 @@ class alarm:
             "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
         }
 
-        pickle_out = open("alarm_data.pickle", "wb")
+        pickle_out = open("data/alarm_data.pickle", "wb")
         pickle.dump(alarm_data, pickle_out)
         pickle_out.close()
 
@@ -681,7 +686,7 @@ sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.
 
 set_alarm_obj = set_alarm(80, sys_hrs, sys_min, ampm)
 
-pickle_in = open("alarm_data.pickle", "rb")
+pickle_in = open("data/alarm_data.pickle", "rb")
 alarm_data = pickle.load(pickle_in)
 pickle_in.close()
 alarm1 = alarm(alarm_data['alarm1'][0], alarm_data['alarm1'][1], alarm_data['alarm1'][2], alarm_data['alarm1'][3], 290)
@@ -689,6 +694,7 @@ alarm2 = alarm(alarm_data['alarm2'][0], alarm_data['alarm2'][1], alarm_data['ala
 alarm3 = alarm(alarm_data['alarm3'][0], alarm_data['alarm3'][1], alarm_data['alarm3'][2], alarm_data['alarm3'][3], 470)
 alarm4 = alarm(alarm_data['alarm4'][0], alarm_data['alarm4'][1], alarm_data['alarm4'][2], alarm_data['alarm4'][3], 560)
 alarm5 = alarm(alarm_data['alarm5'][0], alarm_data['alarm5'][1], alarm_data['alarm5'][2], alarm_data['alarm5'][3], 650)
+
 
 def alarm_window():
     pygame.display.set_caption('Alarm')
@@ -710,6 +716,9 @@ def alarm_window():
         set_alarm_hrs = set_alarm_obj.hrs_font.render("%02d" % set_alarm_obj.hrs, True, line, bg)
         window.blit(set_alarm_hrs, set_alarm_obj.hrs_textRect)
 
+        colan_text = set_alarm_obj.colan_font.render(":", True, line, bg)
+        window.blit(colan_text, set_alarm_obj.colan_textRect)
+
         set_alarm_min = set_alarm_obj.min_font.render("%02d" % set_alarm_obj.min, True, line, bg)
         window.blit(set_alarm_min, set_alarm_obj.min_textRect)
 
@@ -728,19 +737,24 @@ def alarm_window():
         window.blit(alarm4.sw_image, (alarm4.sw_x, alarm4.sw_y))
         window.blit(alarm5.sw_image, (alarm5.sw_x, alarm5.sw_y))
 
-        alarm_str1 = alarm1.alarm_font.render("%02d:%02d %s" % (alarm1.hours, alarm1.minutes, alarm1.ampm), True, line, bg)
+        alarm_str1 = alarm1.alarm_font.render("%02d:%02d %s" % (alarm1.hours, alarm1.minutes, alarm1.ampm), True, line,
+                                              bg)
         window.blit(alarm_str1, alarm1.alarm_textRect)
 
-        alarm_str2 = alarm2.alarm_font.render("%02d:%02d %s" % (alarm2.hours, alarm2.minutes, alarm2.ampm), True, line, bg)
+        alarm_str2 = alarm2.alarm_font.render("%02d:%02d %s" % (alarm2.hours, alarm2.minutes, alarm2.ampm), True, line,
+                                              bg)
         window.blit(alarm_str2, alarm2.alarm_textRect)
 
-        alarm_str3 = alarm3.alarm_font.render("%02d:%02d %s" % (alarm3.hours, alarm3.minutes, alarm3.ampm), True, line, bg)
+        alarm_str3 = alarm3.alarm_font.render("%02d:%02d %s" % (alarm3.hours, alarm3.minutes, alarm3.ampm), True, line,
+                                              bg)
         window.blit(alarm_str3, alarm3.alarm_textRect)
 
-        alarm_str4 = alarm4.alarm_font.render("%02d:%02d %s" % (alarm4.hours, alarm4.minutes, alarm4.ampm), True, line, bg)
+        alarm_str4 = alarm4.alarm_font.render("%02d:%02d %s" % (alarm4.hours, alarm4.minutes, alarm4.ampm), True, line,
+                                              bg)
         window.blit(alarm_str4, alarm4.alarm_textRect)
 
-        alarm_str5 = alarm5.alarm_font.render("%02d:%02d %s" % (alarm5.hours, alarm5.minutes, alarm5.ampm), True, line, bg)
+        alarm_str5 = alarm5.alarm_font.render("%02d:%02d %s" % (alarm5.hours, alarm5.minutes, alarm5.ampm), True, line,
+                                              bg)
         window.blit(alarm_str5, alarm5.alarm_textRect)
 
         window.blit(alarm1.rst_image, (alarm1.rst_x, alarm1.rst_y))
@@ -788,7 +802,6 @@ def alarm_window():
                 else:
                     timer_button.text_color = (200, 200, 200)
 
-
             if event.type == pygame.MOUSEBUTTONDOWN:
                 set_alarm_obj.action(set_alarm_obj.isOver(pos))
                 if set_alarm_obj.set_button.isOver(pos):
@@ -833,13 +846,9 @@ def alarm_window():
 
                 if pos[0] > setting_x and pos[0] < setting_x + setting_img.get_width():
                     if pos[1] > setting_y and pos[1] < setting_y + setting_img.get_height():
-                        setting()
+                        setting_window()
 
         pygame.display.update()
-
-
-
-
 
 
 world_time = {
@@ -913,19 +922,19 @@ location = 'IST'
 
 def get_time():
     time = datetime.datetime.now()
-    sys_time = time.hour + time.minute / 60
-    gmt_time = sys_time - world_time['IST'][1]
-    temp_converted_time = gmt_time + (world_time[location][1])
+    sys_time = time.hour * 60 + time.minute
+    gmt_time = sys_time - (world_time['IST'][1] * 60)
+    temp_converted_time = gmt_time + ((world_time[location][1]) * 60)
 
     if temp_converted_time < 0:
-        converted_time = temp_converted_time + 24
-    elif temp_converted_time > 24:
-        converted_time = temp_converted_time - 24
+        converted_time = temp_converted_time + 24 * 60
+    elif temp_converted_time > 24 * 60:
+        converted_time = temp_converted_time - 24 * 60
     else:
         converted_time = temp_converted_time
 
-    convered_time_hrs, convered_time_min, convered_time_sec = int(converted_time), math.floor(
-        (converted_time - int(converted_time)) * 60), time.second
+    convered_time_hrs, convered_time_min, convered_time_sec = int(converted_time / 60), int(
+        converted_time % 60), time.second
     return convered_time_hrs if convered_time_hrs <= 12 else convered_time_hrs - 12, convered_time_min, convered_time_sec, "AM" if convered_time_hrs < 12 else "PM"
 
 
@@ -1025,17 +1034,19 @@ hrs.set_colorkey(white)
 sec = pygame.image.load('images/sec.png').convert()
 sec.set_colorkey(white)
 
-zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 120), (height - 90), 250, 40, ' Change Time Zone ')
+zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 120), (height - 90), 250, 40,
+                            ' Change Time Zone ')
 
 zone_font = pygame.font.SysFont('notosanscjktc', 30)
 zone_text = zone_font.render('', True, green, bg)
 zone_textRect = zone_text.get_rect()
-zone_textRect.center = ((width // 2) - 110, height-140)
+zone_textRect.center = ((width // 2) - 110, height - 140)
 
 time_font = pygame.font.SysFont('ubuntu', 50)
 time_text = time_font.render('', True, green, bg)
 time_textRect = time_text.get_rect()
 time_textRect.center = ((width // 2) - 130, height - 200)
+
 
 def clock_window():
     pygame.display.set_caption('Clock')  # Title of the window
@@ -1093,7 +1104,6 @@ def clock_window():
                     zone_change_button.color = (151, 147, 245)
                 else:
                     zone_change_button.color = (200, 200, 200)
-
 
                 if alarm_button.isOver(pos):
                     alarm_button.text_color = (151, 147, 245)
