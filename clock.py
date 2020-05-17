@@ -242,7 +242,7 @@ def setting_window():
 
     def ok(snooz_time, tone):
         global current_tone
-        alarm_prop = {"snooz_time": snooz_time, "tone_number": tone, }
+        alarm_prop = {"snooz_time": int(snooz_time), "tone_number": tone, }
         pickle_out = open("data/alarm_prop.pickle", "wb")
         pickle.dump(alarm_prop, pickle_out)
         pickle_out.close()
@@ -262,6 +262,7 @@ def setting_window():
         pygame.mixer.Sound.stop(tone11.tone)
         pygame.mixer.Sound.stop(tone12.tone)
         pygame.mixer.Sound.stop(tone13.tone)
+
 
     tone1 = tone(1, x + 30 * 0, "tones/sound.wav", 'Hope')
     tone2 = tone(2, x + 30 * 1, "tones/back.wav", 'Back Home')
@@ -613,7 +614,7 @@ class alarm:
         root.geometry("300x250+700+100")
 
         pygame.mixer.Sound.play(tone)
-        pickle_in = open("alarm_prop.pickle", "rb")
+        pickle_in = open("data/alarm_prop.pickle", "rb")
         alarm_prop = pickle.load(pickle_in)
         pickle_in.close()
         snooz_time = alarm_prop['snooz_time']
@@ -1055,6 +1056,8 @@ def clock_window():
         pygame.time.delay(10)
         window.fill(bg)
         clock_button.text_color = (151, 147, 245)
+        time = datetime.datetime.now()
+        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
         hrs_val, min_val, sec_val, after = get_time()
 
         window.blit(frame, (width // 2 - frame.get_width() // 2, 250 - frame.get_height() // 2))
@@ -1081,6 +1084,12 @@ def clock_window():
 
         time_str = time_font.render("%02d:%02d:%02d %s" % (hrs_val, min_val, sec_val, after), True, line, bg)
         window.blit(time_str, time_textRect)
+
+        alarm1.comparison(sys_hrs, sys_min, ampm)
+        alarm2.comparison(sys_hrs, sys_min, ampm)
+        alarm3.comparison(sys_hrs, sys_min, ampm)
+        alarm4.comparison(sys_hrs, sys_min, ampm)
+        alarm5.comparison(sys_hrs, sys_min, ampm)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1130,11 +1139,19 @@ def stopwatch_window():
         pygame.time.delay(10)
         window.fill(bg)
         stopwatch_button.text_color = (151, 147, 245)
+        time = datetime.datetime.now()
+        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
 
         clock_button.draw(window, bg)
         alarm_button.draw(window, bg)
         stopwatch_button.draw(window, bg)
         timer_button.draw(window, bg)
+
+        alarm1.comparison(sys_hrs, sys_min, ampm)
+        alarm2.comparison(sys_hrs, sys_min, ampm)
+        alarm3.comparison(sys_hrs, sys_min, ampm)
+        alarm4.comparison(sys_hrs, sys_min, ampm)
+        alarm5.comparison(sys_hrs, sys_min, ampm)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1177,10 +1194,18 @@ def timer_window():
         pygame.time.delay(10)
         window.fill(bg)
         timer_button.text_color = (151, 147, 245)
+        time = datetime.datetime.now()
+        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
         clock_button.draw(window, bg)
         alarm_button.draw(window, bg)
         stopwatch_button.draw(window, bg)
         timer_button.draw(window, bg)
+
+        alarm1.comparison(sys_hrs, sys_min, ampm)
+        alarm2.comparison(sys_hrs, sys_min, ampm)
+        alarm3.comparison(sys_hrs, sys_min, ampm)
+        alarm4.comparison(sys_hrs, sys_min, ampm)
+        alarm5.comparison(sys_hrs, sys_min, ampm)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
