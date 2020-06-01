@@ -15,7 +15,7 @@ width = 600
 height = 700
 ubuntu_font = 'font/Ubuntu-Regular.ttf'
 opensans_font = 'font/OpenSans-SemiBold.ttf'
-node = 'font/NotoSansCJK-Medium.ttc'
+verdana_font = 'font/verdana.ttf'
 window = pygame.display.set_mode((width, height))
 
 
@@ -1034,13 +1034,13 @@ hrs.set_colorkey(white)
 sec = pygame.image.load('images/sec.png').convert()
 sec.set_colorkey(white)
 
-zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 120), (height - 90), 250, 40,
+zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 110), (height - 90), 250, 40,
                             ' Change Time Zone ')
 
-zone_font = pygame.font.Font(node, 30)
+zone_font = pygame.font.Font(verdana_font, 28)
 zone_text = zone_font.render('', True, green, bg)
 zone_textRect = zone_text.get_rect()
-zone_textRect.center = ((width // 2) - 110, height - 140)
+zone_textRect.center = ((width // 2) - 122, height - 145)
 
 time_font = pygame.font.Font(ubuntu_font, 50)
 time_text = time_font.render('', True, green, bg)
