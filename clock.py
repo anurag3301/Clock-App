@@ -2,7 +2,6 @@ import pygame
 import datetime
 import tkinter as tk
 import pickle
-import math
 
 pygame.init()
 
@@ -14,7 +13,9 @@ line = (200, 230, 255)
 bg = (40, 40, 40)
 width = 600
 height = 700
-
+ubuntu_font = 'font/Ubuntu-Regular.ttf'
+opensans_font = 'font/OpenSans-SemiBold.ttf'
+node = 'font/NotoSansCJK-Medium.ttc'
 window = pygame.display.set_mode((width, height))
 
 
@@ -35,10 +36,10 @@ class button():
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
-            font = pygame.font.SysFont('keraleeyam', 30)
+            font = pygame.font.Font(opensans_font, 25)
             text = font.render(self.text, 1, self.text_color)
             win.blit(text, (self.x + (self.width // 2 - text.get_width() // 2),
-                            self.y + 3 + (self.height // 2 - text.get_height() // 2)))
+                            self.y + 3 + ((self.height // 2 - text.get_height() // 2)-5)))
 
     def isOver(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.width:
@@ -47,11 +48,10 @@ class button():
 
         return False
 
-
 clock_button = button(bg, (200, 200, 200), 5, 0, 70, 30, ' Clock ')
-alarm_button = button(bg, (200, 200, 200), 80, 0, 70, 30, ' Alarm ')
-stopwatch_button = button(bg, (200, 200, 200), 155, 0, 130, 30, ' Stop Watch ')
-timer_button = button(bg, (200, 200, 200), 290, 0, 70, 30, ' Timer ')
+alarm_button = button(bg, (200, 200, 200), 93, 0, 70, 30, ' Alarm ')
+stopwatch_button = button(bg, (200, 200, 200), 188, 0, 130, 30, ' Stop Watch ')
+timer_button = button(bg, (200, 200, 200), 335, 0, 70, 30, ' Timer ')
 
 
 def tone_return(sno):
@@ -277,7 +277,6 @@ def setting_window():
     tone11 = tone(11, x + 30 * 10, "tones/start.wav", 'Start It Over')
     tone12 = tone(12, x + 30 * 11, "tones/suns.wav", 'Suns Up')
     tone13 = tone(13, x + 30 * 12, "tones/xilla.wav", 'XILLA!')
-
     tones = {tone1.name: [tone1.y, 1],
              tone2.name: [tone2.y, 2],
              tone3.name: [tone3.y, 3],
@@ -292,16 +291,16 @@ def setting_window():
              tone12.name: [tone12.y, 12],
              tone13.name: [tone13.y, 13],
              }
-    song_label = tk.Label(canvas, text="Select Tone", font=('ubuntu', 25), bg='#282828', fg='#0099cc').place(x=7, y=1)
-    snooz_label = tk.Label(canvas, text="Snooz\nDuration", font=('ubuntu', 15), bg='#282828', fg='#C8E6FF').place(x=220,
+    song_label = tk.Label(canvas, text="Select Tone", font=('TkFixedFont', 25), bg='#282828', fg='#0099cc').place(x=7, y=1)
+    snooz_label = tk.Label(canvas, text="Snooz\nDuration", font=('TkFixedFont', 13), bg='#282828', fg='#C8E6FF').place(x=220,
                                                                                                                   y=150)
-    snooz_entry = tk.Entry(canvas, text='45', width=3, textvariable=snooz_val, font=('ubuntu', 15)).place(x=315, y=160)
-    min_label = tk.Label(canvas, text="min", font=('ubuntu', 15), bg='#282828', fg='#C8E6FF').place(x=360, y=160)
+    snooz_entry = tk.Entry(canvas, text='45', width=3, textvariable=snooz_val, font=('TkFixedFont', 15)).place(x=310, y=160)
+    min_label = tk.Label(canvas, text="min", font=('TkFixedFont', 13), bg='#282828', fg='#C8E6FF').place(x=360, y=160)
 
-    ok_button = tk.Button(canvas, text="OK", font=('ubuntu', 20),
+    ok_button = tk.Button(canvas, text="OK", font=('TkFixedFont', 20),
                           command=lambda: ok(snooz_val.get(), tone_number.get())).place(x=320, y=440)
     for (text, value) in tones.items():
-        tk.Radiobutton(canvas, text=text, variable=tone_number, font=('ubuntu', 15), bg='#282828', fg='#0099cc',
+        tk.Radiobutton(canvas, text=text, variable=tone_number, font=('TkFixedFont', 14), bg='#282828', fg='#0099cc',
                        activeforeground='#C8E6FF', activebackground='#282828', highlightthickness=0,
                        value=value[1]).place(y=value[0], x=2)
     canvas.pack()
@@ -492,27 +491,27 @@ class set_alarm:
         self.ampm_dw_x = 365 - self.ampm_dw.get_width() // 2
         self.ampm_dw_y = y + 100 - self.ampm_dw.get_height() // 2
 
-        self.hrs_font = pygame.font.SysFont('ubuntu', 50)
+        self.hrs_font = pygame.font.Font(ubuntu_font, 50)
         self.hrs_text = self.hrs_font.render('', True, green, bg)
         self.hrs_textRect = self.hrs_text.get_rect()
         self.hrs_textRect.center = 60 - self.hrs_text.get_width() // 2, y + 22 + self.hrs_text.get_height() // 2
 
-        self.colan_font = pygame.font.SysFont('ubuntu', 70)
+        self.colan_font = pygame.font.Font(ubuntu_font, 70)
         self.colan_text = self.colan_font.render(':', True, green, bg)
         self.colan_textRect = self.colan_text.get_rect()
         self.colan_textRect.center = 160 - self.colan_text.get_width() // 2, y + 5 + self.colan_text.get_height() // 2
 
-        self.min_font = pygame.font.SysFont('ubuntu', 50)
+        self.min_font = pygame.font.Font(ubuntu_font, 50)
         self.min_text = self.min_font.render('', True, green, bg)
         self.min_textRect = self.min_text.get_rect()
         self.min_textRect.center = 195 - self.min_text.get_width() // 2, y + 22 + self.min_text.get_height() // 2
 
-        self.ampm_font = pygame.font.SysFont('ubuntu', 50)
+        self.ampm_font = pygame.font.Font(ubuntu_font, 50)
         self.ampm_text = self.ampm_font.render('', True, green, bg)
         self.ampm_textRect = self.ampm_text.get_rect()
         self.ampm_textRect.center = 325 - self.ampm_text.get_width() // 2, y + 22 + self.ampm_text.get_height() // 2
 
-        self.set_button = button((200, 200, 200), (0, 0, 0), width - 150, y + 30, 120, 40, 'Set Alarm')
+        self.set_button = button((200, 200, 200), (0, 0, 0), width - 150, y + 30, 135, 40, 'Set Alarm')
 
     def action(self, button):
 
@@ -1038,12 +1037,12 @@ sec.set_colorkey(white)
 zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 120), (height - 90), 250, 40,
                             ' Change Time Zone ')
 
-zone_font = pygame.font.SysFont('notosanscjktc', 30)
+zone_font = pygame.font.Font(node, 30)
 zone_text = zone_font.render('', True, green, bg)
 zone_textRect = zone_text.get_rect()
 zone_textRect.center = ((width // 2) - 110, height - 140)
 
-time_font = pygame.font.SysFont('ubuntu', 50)
+time_font = pygame.font.Font(ubuntu_font, 50)
 time_text = time_font.render('', True, green, bg)
 time_textRect = time_text.get_rect()
 time_textRect.center = ((width // 2) - 130, height - 200)
@@ -1129,7 +1128,7 @@ def clock_window():
                 else:
                     timer_button.text_color = (200, 200, 200)
 
-        pygame.display.update()
+        pygame.display.flip()
 
 
 def stopwatch_window():
