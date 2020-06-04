@@ -582,7 +582,7 @@ class alarm:
         self.rst_image.set_colorkey(white)
         self.rst_x = width - 70 - self.rst_image.get_width() // 2
         self.rst_y = y - self.rst_image.get_height() // 2
-        self.alarm_font = pygame.font.SysFont('ubuntu', 50)
+        self.alarm_font = pygame.font.Font(ubuntu_font, 50)
         self.alarm_text = self.alarm_font.render('', True, green, bg)
         self.alarm_textRect = self.alarm_text.get_rect()
         self.alarm_textRect.center = 200 - self.alarm_text.get_width() // 2, y + 25 - self.alarm_text.get_height() // 2
