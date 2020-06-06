@@ -18,7 +18,7 @@ node = 'font/NotoSansCJK-Medium.ttc'
 
 window = pygame.display.set_mode((width, height))
 
-class button():
+class button:
     def __init__(self, color, text_color, x, y, width, height, text):
         self.color = color
         self.x = x
@@ -27,6 +27,7 @@ class button():
         self.height = height
         self.text = text
         self.text_color = text_color
+        self.font_size = 25
 
     def draw(self, win, outline=None):
         if outline:
@@ -35,10 +36,10 @@ class button():
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
-            font = pygame.font.Font(opensans_font, 25)
+            font = pygame.font.Font(opensans_font, self.font_size)
             text = font.render(self.text, 1, self.text_color)
             win.blit(text, (self.x + (self.width // 2 - text.get_width() // 2),
-                            self.y + 3 + ((self.height // 2 - text.get_height() // 2)-5)))
+                            self.y + 3 + ((self.height // 2 - text.get_height() // 2) - 5)))
 
     def isOver(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.width:
@@ -47,6 +48,10 @@ class button():
 
         return False
 
+start_button = button((200, 200, 200), (0, 0, 0), 430, 635, 150, 55, ' Start ')
+start_button.font_size = 35
+reset_button = button((200, 200, 200), (0, 0, 0), 230, 635, 150, 55, ' Reset ')
+reset_button.font_size = 35
 
 clock_button = button(bg, (200, 200, 200), 5, 0, 70, 30, ' Clock ')
 alarm_button = button(bg, (200, 200, 200), 93, 0, 70, 30, ' Alarm ')
@@ -83,9 +88,9 @@ stopwatch_obj = stopwatch(100, 50)
 def stopwatch_window():
     pygame.display.set_caption('Stop Watch')
     run = True
-    duration = 0
-    sec = 0
-    min = 0
+    duration, sec, min, millis = 0, 0, 0, 0
+    stopwatch_run = False
+    active_status = False
     while run:
         duration += 1
         time.sleep(0.01)
@@ -105,10 +110,16 @@ def stopwatch_window():
         # alarm4.comparison(sys_hrs, sys_min, ampm)
         # alarm5.comparison(sys_hrs, sys_min, ampm)
 
-        millis = duration % 100
-        sec += 1 if duration % 100 == 0 else 0
-        sec %= 60
-        min += 1 if duration % 6000 == 0 else 0
+        if stopwatch_run:
+            millis = duration % 100
+            sec += 1 if duration % 100 == 0 else 0
+            sec %= 60
+            min += 1 if duration % 6000 == 0 else 0
+            start_button.text = ' Pause '
+        elif not active_status:
+            start_button.text = ' Start '
+        else:
+            start_button.text = ' Resume '
 
         stopwatch_obj.hrs_text = stopwatch_obj.font0.render('%02d' % min, True, line, bg)
         window.blit(stopwatch_obj.hrs_text, stopwatch_obj.hrs_textRect)
@@ -123,6 +134,9 @@ def stopwatch_window():
 
         window.blit(stopwatch_obj.colan_dot, stopwatch_obj.colan_dotRect)
 
+        start_button.draw(window, bg)
+        reset_button.draw(window, bg)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -131,7 +145,14 @@ def stopwatch_window():
             pos = pygame.mouse.get_pos()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
+                if start_button.isOver(pos):
+                    stopwatch_run = not stopwatch_run
+                    active_status = True
+
+                if reset_button.isOver(pos):
+                    duration, sec, min, millis = 0, 0, 0, 0
+                    stopwatch_run = False
+                    active_status = False
                 # if clock_button.isOver(pos):
                 #     clock_window()
                 # if alarm_button.isOver(pos):
@@ -154,6 +175,16 @@ def stopwatch_window():
                     timer_button.text_color = (151, 147, 245)
                 else:
                     timer_button.text_color = (200, 200, 200)
+
+                if start_button.isOver(pos):
+                    start_button.color = (151, 147, 245)
+                else:
+                    start_button.color = (200, 200, 200)
+
+                if reset_button.isOver(pos):
+                    reset_button.color = (151, 147, 245)
+                else:
+                    reset_button.color = (200, 200, 200)
 
         pygame.display.update()
 

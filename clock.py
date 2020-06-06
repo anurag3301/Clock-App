@@ -19,7 +19,7 @@ verdana_font = 'font/verdana.ttf'
 window = pygame.display.set_mode((width, height))
 
 
-class button():
+class button:
     def __init__(self, color, text_color, x, y, width, height, text):
         self.color = color
         self.x = x
@@ -28,6 +28,7 @@ class button():
         self.height = height
         self.text = text
         self.text_color = text_color
+        self.font_size = 25
 
     def draw(self, win, outline=None):
         if outline:
@@ -36,10 +37,10 @@ class button():
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
-            font = pygame.font.Font(opensans_font, 25)
+            font = pygame.font.Font(opensans_font, self.font_size)
             text = font.render(self.text, 1, self.text_color)
             win.blit(text, (self.x + (self.width // 2 - text.get_width() // 2),
-                            self.y + 3 + ((self.height // 2 - text.get_height() // 2)-5)))
+                            self.y + 3 + ((self.height // 2 - text.get_height() // 2) - 5)))
 
     def isOver(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.width:
