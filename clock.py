@@ -264,19 +264,20 @@ def setting_window():
         pygame.mixer.Sound.stop(tone13.tone)
 
 
-    tone1 = tone(1, x + 30 * 0, "tones/sound.wav", 'Hope')
-    tone2 = tone(2, x + 30 * 1, "tones/back.wav", 'Back Home')
-    tone3 = tone(3, x + 30 * 2, "tones/carbin.wav", 'Carbin')
-    tone4 = tone(4, x + 30 * 3, "tones/eptic.wav", 'The End')
-    tone5 = tone(5, x + 30 * 4, "tones/moon.wav", 'Moon Love')
-    tone6 = tone(6, x + 30 * 5, "tones/watch.wav", 'Watch This')
-    tone7 = tone(7, x + 30 * 6, "tones/wistle.wav", 'Wistle War')
-    tone8 = tone(8, x + 30 * 7, "tones/follow.wav", 'Follow')
-    tone9 = tone(9, x + 30 * 8, "tones/propaganda.wav", 'Propaganda')
-    tone10 = tone(10, x + 30 * 9, "tones/ride it.wav", 'Ride It')
+    tone1 = tone(1, x + 30 * 0,    "tones/sound.wav", 'Hope')
+    tone2 = tone(2, x + 30 * 1,    "tones/back.wav", 'Back Home')
+    tone3 = tone(3, x + 30 * 2,    "tones/carbin.wav", 'Carbin')
+    tone4 = tone(4, x + 30 * 3,    "tones/eptic.wav", 'The End')
+    tone5 = tone(5, x + 30 * 4,    "tones/moon.wav", 'Moon Love')
+    tone6 = tone(6, x + 30 * 5,    "tones/watch.wav", 'Watch This')
+    tone7 = tone(7, x + 30 * 6,    "tones/wistle.wav", 'Wistle War')
+    tone8 = tone(8, x + 30 * 7,    "tones/follow.wav", 'Follow')
+    tone9 = tone(9, x + 30 * 8,    "tones/propaganda.wav", 'Propaganda')
+    tone10 = tone(10, x + 30 * 9,  "tones/ride it.wav", 'Ride It')
     tone11 = tone(11, x + 30 * 10, "tones/start.wav", 'Start It Over')
     tone12 = tone(12, x + 30 * 11, "tones/suns.wav", 'Suns Up')
     tone13 = tone(13, x + 30 * 12, "tones/xilla.wav", 'XILLA!')
+
     tones = {tone1.name: [tone1.y, 1],
              tone2.name: [tone2.y, 2],
              tone3.name: [tone3.y, 3],
