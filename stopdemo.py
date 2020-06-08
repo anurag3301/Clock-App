@@ -148,15 +148,15 @@ class capture:
         self.milli_textRect.center = self.x + 240, y
 
 
-cap1 = capture(1,   200, 0, 0, 0, 0, 0)
-cap2 = capture(2,   200, 0, 0, 0, 0, 0)
-cap3 = capture(3,   200, 0, 0, 0, 0, 0)
-cap4 = capture(4,   200, 0, 0, 0, 0, 0)
-cap5 = capture(5,   200, 0, 0, 0, 0, 0)
-cap6 = capture(6,   200, 0, 0, 0, 0, 0)
-cap7 = capture(7,   200, 0, 0, 0, 0, 0)
-cap8 = capture(8,   200, 0, 0, 0, 0, 0)
-cap9 = capture(9,   200, 0, 0, 0, 0, 0)
+cap1 = capture(1, 200, 0, 0, 0, 0, 0)
+cap2 = capture(2, 200, 0, 0, 0, 0, 0)
+cap3 = capture(3, 200, 0, 0, 0, 0, 0)
+cap4 = capture(4, 200, 0, 0, 0, 0, 0)
+cap5 = capture(5, 200, 0, 0, 0, 0, 0)
+cap6 = capture(6, 200, 0, 0, 0, 0, 0)
+cap7 = capture(7, 200, 0, 0, 0, 0, 0)
+cap8 = capture(8, 200, 0, 0, 0, 0, 0)
+cap9 = capture(9, 200, 0, 0, 0, 0, 0)
 cap10 = capture(10, 200, 0, 0, 0, 0, 0)
 cap11 = capture(11, 200, 0, 0, 0, 0, 0)
 cap12 = capture(12, 200, 0, 0, 0, 0, 0)
@@ -199,39 +199,74 @@ def isOverStopwatch(pos):
             return 'sub'
 
 
+s_run = True
+s_duration, s_milli, s_sec, s_min, s_hrs = 0, 0, 0, 0, 0
+s_stopwatch_run = False
+s_active_status = False
+s_state = False
+s_counter = 0
+s_caplsit = [cap1, cap2, cap3, cap4, cap5, cap6, cap7, cap8, cap9, cap10, cap11, cap12, cap13, cap14, cap15, cap16,
+             cap17, cap18, cap19, cap20, cap21, cap22, cap23, cap24, cap25, cap26, cap27, cap28, cap29, cap30]
+s_position = [220, 270, 320, 370, 420, 470, 520]
+s_spl_lap = True
+s_cap_count = 0
+
+
 def stopwatch_window():
     pygame.display.set_caption('Stop Watch')
-    run = True
-    duration, millis, sec, min, hrs = 0, 0, 0, 0, 0
-    stopwatch_run = False
-    active_status = False
-    state = False
-    counter = 0
-    ch = [cap1, cap2, cap3, cap4, cap5, cap6, cap7, cap8, cap9, cap10, cap11, cap12, cap13, cap14, cap15, cap16, cap17,
-          cap18, cap19, cap20, cap21, cap22, cap23, cap24, cap25, cap26, cap27, cap28, cap29, cap30]
-    position = [220, 270, 320, 370, 420, 470, 520]
-    spl_lap = True
-    while run:
-        duration += 100
+    global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter
+
+    def capture():
+        global s_cap_count, s_hrs, s_min, s_milli, s_sec, s_duration, s_counter
+        if s_stopwatch_run and s_counter < 23:
+            print(s_hrs, s_min, s_sec, s_milli)
+            s_caplsit[s_cap_count].sn_text = s_caplsit[s_cap_count].font3.render("%02d)" % s_caplsit[s_cap_count].sn,
+                                                                                 True, line, bg)
+            s_caplsit[s_cap_count].hrs_text = s_caplsit[s_cap_count].font0.render("%02d" % s_hrs, True, line, bg)
+            s_caplsit[s_cap_count].min_text = s_caplsit[s_cap_count].font0.render("%02d" % s_min, True, line, bg)
+            s_caplsit[s_cap_count].sec_text = s_caplsit[s_cap_count].font0.render("%02d" % s_sec, True, line, bg)
+            s_caplsit[s_cap_count].milli_text = s_caplsit[s_cap_count].font0.render("%02d" % s_milli, True, line, bg)
+            s_cap_count += 1
+            if s_cap_count > 7:
+                s_counter += 1
+            if not s_spl_lap:
+                s_duration, s_sec, s_min, s_milli, s_hrs = 0, 0, 0, 0, 0
+
+    def s_reset():
+        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_cap_count
+        s_duration, s_sec, s_min, s_milli, s_hrs = 0, 0, 0, 0, 0
+        s_stopwatch_run = False
+        s_active_status = False
+        s_state = False
+        s_cap_count = 0
+        for i in s_caplsit:
+            i.sn_text = i.font3.render("%02d)" % i.sn, True, line, bg)
+            i.hrs_text = i.font0.render("%02d" % s_hrs, True, line, bg)
+            i.min_text = i.font0.render("%02d" % s_min, True, line, bg)
+            i.sec_text = i.font0.render("%02d" % s_sec, True, line, bg)
+            i.milli_text = i.font0.render("%02d" % s_milli, True, line, bg)
+
+    while s_run:
+        s_duration += 100
         time.sleep(0.01)
         pos_counter = 0
         window.fill(bg)
-        if stopwatch_run:
-            millis = duration % 100
-            sec += 1 if duration % 100 == 0 else 0
-            sec %= 60
-            min += 1 if duration % 6000 == 0 else 0
-            if min == 60:
-                state = True
-            min %= 60
-            hrs += 1 if duration % 360000 == 0 else 0
+        if s_stopwatch_run:
+            s_milli = s_duration % 100
+            s_sec += 1 if s_duration % 100 == 0 else 0
+            s_sec %= 60
+            s_min += 1 if s_duration % 6000 == 0 else 0
+            if s_min == 60:
+                s_state = True
+            s_min %= 60
+            s_hrs += 1 if s_duration % 360000 == 0 else 0
             start_button.text = ' Pause '
-        elif not active_status:
+        elif not s_active_status:
             start_button.text = ' Start '
         else:
             start_button.text = ' Resume '
 
-        if not state:
+        if not s_state:
             minx = stopwatch_obj.x - 8
             secx = stopwatch_obj.x + 142
             millix = stopwatch_obj.x + 292
@@ -239,13 +274,13 @@ def stopwatch_window():
             stopwatch_obj.sec_textRect.center = secx, stopwatch_obj.y + stopwatch_obj.sec_text.get_height() // 2
             stopwatch_obj.milli_textRect.center = millix, stopwatch_obj.y + stopwatch_obj.milli_text.get_height() // 2
 
-            stopwatch_obj.min_text = stopwatch_obj.font0.render('%02d' % min, True, line, bg)
+            stopwatch_obj.min_text = stopwatch_obj.font0.render('%02d' % s_min, True, line, bg)
             window.blit(stopwatch_obj.min_text, stopwatch_obj.min_textRect)
 
-            stopwatch_obj.sec_text = stopwatch_obj.font0.render('%02d' % sec, True, line, bg)
+            stopwatch_obj.sec_text = stopwatch_obj.font0.render('%02d' % s_sec, True, line, bg)
             window.blit(stopwatch_obj.sec_text, stopwatch_obj.sec_textRect)
 
-            stopwatch_obj.milli_text = stopwatch_obj.font0.render('%02d' % millis, True, line, bg)
+            stopwatch_obj.milli_text = stopwatch_obj.font0.render('%02d' % s_milli, True, line, bg)
             window.blit(stopwatch_obj.milli_text, stopwatch_obj.milli_textRect)
 
             stopwatch_obj.colan_dot = stopwatch_obj.font1.render('.', True, line, bg)
@@ -257,23 +292,23 @@ def stopwatch_window():
             stopwatch_obj.min_textRect.center = minx, stopwatch_obj.y + stopwatch_obj.min_text.get_height() // 2
             stopwatch_obj.sec_textRect.center = secx, stopwatch_obj.y + stopwatch_obj.sec_text.get_height() // 2
 
-            stopwatch_obj.hrs_text = stopwatch_obj.font0.render('%02d' % hrs, True, line, bg)
+            stopwatch_obj.hrs_text = stopwatch_obj.font0.render('%02d' % s_hrs, True, line, bg)
             window.blit(stopwatch_obj.hrs_text, stopwatch_obj.hrs_textRect)
 
-            stopwatch_obj.min_text = stopwatch_obj.font0.render('%02d' % min, True, line, bg)
+            stopwatch_obj.min_text = stopwatch_obj.font0.render('%02d' % s_min, True, line, bg)
             window.blit(stopwatch_obj.min_text, stopwatch_obj.min_textRect)
 
-            stopwatch_obj.sec_text = stopwatch_obj.font0.render('%02d' % sec, True, line, bg)
+            stopwatch_obj.sec_text = stopwatch_obj.font0.render('%02d' % s_sec, True, line, bg)
             window.blit(stopwatch_obj.sec_text, stopwatch_obj.sec_textRect)
 
             stopwatch_obj.colan_dot = stopwatch_obj.font1.render(':', True, line, bg)
 
-        for i in range(counter, counter + 7):
-            ch[i].recenter(position[pos_counter])
-            ch[i].build()
+        for i in range(s_counter, s_counter + 7):
+            s_caplsit[i].recenter(s_position[pos_counter])
+            s_caplsit[i].build()
             pos_counter += 1
 
-        if spl_lap:
+        if s_spl_lap:
             state_button.text = ' SPLIT '
         else:
             state_button.text = ' LAP '
@@ -298,25 +333,22 @@ def stopwatch_window():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isOver(pos):
-                    stopwatch_run = not stopwatch_run
-                    active_status = True
+                    s_stopwatch_run = not s_stopwatch_run
+                    s_active_status = True
 
                 if reset_button.isOver(pos):
-                    duration, sec, min, millis, hrs = 0, 0, 0, 0, 0
-                    stopwatch_run = False
-                    active_status = False
-                    state = False
+                    s_reset()
 
                 if capture_button.isOver(pos):
-                    print("%02d:%02d:%02d.%02d" % (hrs, min, sec, millis))
+                    capture()
 
                 if state_button.isOver(pos):
-                    spl_lap = not spl_lap
+                    s_spl_lap = not s_spl_lap
 
-                if isOverStopwatch(pos) == 'add' and counter > 0:
-                    counter -= 1
-                if isOverStopwatch(pos) == 'sub' and counter < 23:
-                    counter += 1
+                if isOverStopwatch(pos) == 'add' and s_counter > 0:
+                    s_counter -= 1
+                if isOverStopwatch(pos) == 'sub' and s_counter < 23:
+                    s_counter += 1
 
             if event.type == pygame.MOUSEMOTION:
                 if start_button.isOver(pos):
