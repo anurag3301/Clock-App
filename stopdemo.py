@@ -218,8 +218,7 @@ def stopwatch_window():
 
     def capture():
         global s_cap_count, s_hrs, s_min, s_milli, s_sec, s_duration, s_counter
-        if s_stopwatch_run and s_counter < 23:
-            print(s_hrs, s_min, s_sec, s_milli)
+        if s_stopwatch_run and s_cap_count < 30:
             s_caplsit[s_cap_count].sn_text = s_caplsit[s_cap_count].font3.render("%02d)" % s_caplsit[s_cap_count].sn,
                                                                                  True, line, bg)
             s_caplsit[s_cap_count].hrs_text = s_caplsit[s_cap_count].font0.render("%02d" % s_hrs, True, line, bg)
@@ -228,9 +227,10 @@ def stopwatch_window():
             s_caplsit[s_cap_count].milli_text = s_caplsit[s_cap_count].font0.render("%02d" % s_milli, True, line, bg)
             s_cap_count += 1
             if s_cap_count > 7:
-                s_counter += 1
+                s_counter = s_cap_count-7
             if not s_spl_lap:
                 s_duration, s_sec, s_min, s_milli, s_hrs = 0, 0, 0, 0, 0
+
 
     def s_reset():
         global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_cap_count
