@@ -249,6 +249,7 @@ def stopwatch_window():
             i.milli_text = i.font0.render("%02d" % s_milli, True, line, bg)
 
     while s_run:
+        global s_cap_count
         s_duration += 1
         time.sleep(0.01)
         pos_counter = 0
@@ -305,10 +306,17 @@ def stopwatch_window():
 
             stopwatch_obj.colan_dot = stopwatch_obj.font1.render(':', True, line, bg)
 
-        for i in range(s_counter, s_counter + 7):
-            s_caplsit[i].recenter(s_position[pos_counter])
-            s_caplsit[i].build()
-            pos_counter += 1
+        if s_cap_count > 7:
+            window.blit(up, up_cord)
+            window.blit(down, down_cord)
+            for i in range(s_counter, s_counter + 7):
+                s_caplsit[i].recenter(s_position[pos_counter])
+                s_caplsit[i].build()
+                pos_counter += 1
+        else:
+            for i in range(s_cap_count):
+                s_caplsit[i].recenter(s_position[i])
+                s_caplsit[i].build()
 
         if s_spl_lap:
             state_button.text = ' SPLIT '
@@ -323,8 +331,6 @@ def stopwatch_window():
         reset_button.draw(window, bg)
         capture_button.draw(window, bg)
         state_button.draw(window, bg)
-        window.blit(up, up_cord)
-        window.blit(down, down_cord)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -347,10 +353,11 @@ def stopwatch_window():
                 if state_button.isOver(pos) and not s_active_status:
                     s_spl_lap = not s_spl_lap
 
-                if isOverStopwatch(pos) == 'up' and s_counter > 0:
-                    s_counter -= 1
-                if isOverStopwatch(pos) == 'down' and s_counter < 23:
-                    s_counter += 1
+                if s_cap_count > 7:
+                    if isOverStopwatch(pos) == 'up' and s_counter > 0:
+                        s_counter -= 1
+                    if isOverStopwatch(pos) == 'down' and s_counter < 23:
+                        s_counter += 1
 
             if event.type == pygame.MOUSEMOTION:
                 if start_button.isOver(pos):
