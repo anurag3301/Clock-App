@@ -63,6 +63,7 @@ state_button = button(bg, (200, 200, 200), 50, 595, 110, 35, ' ')
 state_button.font_size = 30
 
 
+
 class stopwatch:
     def __init__(self, x, y):
         self.x, self.y = x, y
