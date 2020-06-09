@@ -2,7 +2,6 @@ import pygame
 import datetime
 import tkinter as tk
 import pickle
-import time as t
 
 pygame.init()
 
@@ -550,24 +549,24 @@ class set_alarm:
 
     def isOver(self, pos):
         if self.add_hr_x < pos[0] < self.add_hr_x + self.add_hr.get_width():
-            if pos[1] > self.add_hr_y and pos[1] < self.add_hr_y + self.add_hr.get_height():
+            if self.add_hr_y < pos[1] < self.add_hr_y + self.add_hr.get_height():
                 return 'add_hr'
         if self.sub_hr_x < pos[0] < self.sub_hr_x + self.sub_hr.get_width():
-            if pos[1] > self.sub_hr_y and pos[1] < self.sub_hr_y + self.sub_hr.get_height():
+            if self.sub_hr_y < pos[1] < self.sub_hr_y + self.sub_hr.get_height():
                 return 'sub_hr'
 
         if self.add_min_x < pos[0] < self.add_min_x + self.add_hr.get_width():
-            if pos[1] > self.add_min_y and pos[1] < self.add_min_y + self.add_min.get_height():
+            if self.add_min_y < pos[1] < self.add_min_y + self.add_min.get_height():
                 return 'add_min'
         if self.sub_min_x < pos[0] < self.sub_min_x + self.sub_min.get_width():
-            if pos[1] > self.sub_min_y and pos[1] < self.sub_min_y + self.sub_min.get_height():
+            if self.sub_min_y < pos[1] < self.sub_min_y + self.sub_min.get_height():
                 return 'sub_min'
 
         if self.ampm_up_x < pos[0] < self.ampm_up_x + self.ampm_up.get_width():
-            if pos[1] > self.ampm_up_y and pos[1] < self.ampm_up_y + self.ampm_up.get_height():
+            if self.ampm_up_y < pos[1] < self.ampm_up_y + self.ampm_up.get_height():
                 return 'ampm_up'
         if self.ampm_dw_x < pos[0] < self.ampm_dw_x + self.ampm_dw.get_width():
-            if pos[1] > self.ampm_dw_y and pos[1] < self.ampm_dw_y + self.ampm_dw.get_height():
+            if self.ampm_dw_y < pos[1] < self.ampm_dw_y + self.ampm_dw.get_height():
                 return 'ampm_dw'
 
 
@@ -701,161 +700,9 @@ alarm3 = alarm(alarm_data['alarm3'][0], alarm_data['alarm3'][1], alarm_data['ala
 alarm4 = alarm(alarm_data['alarm4'][0], alarm_data['alarm4'][1], alarm_data['alarm4'][2], alarm_data['alarm4'][3], 560)
 alarm5 = alarm(alarm_data['alarm5'][0], alarm_data['alarm5'][1], alarm_data['alarm5'][2], alarm_data['alarm5'][3], 650)
 
-
-def alarm_window():
-    pygame.display.set_caption('Alarm')
-    while True:
-        alarm_button.text_color = (151, 147, 245)
-        time = datetime.datetime.now()
-        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
-        window.fill(bg)
-
-        window.blit(set_alarm_obj.add_hr, (set_alarm_obj.add_hr_x, set_alarm_obj.add_hr_y))
-        window.blit(set_alarm_obj.sub_hr, (set_alarm_obj.sub_hr_x, set_alarm_obj.sub_hr_y))
-
-        window.blit(set_alarm_obj.add_min, (set_alarm_obj.add_min_x, set_alarm_obj.add_min_y))
-        window.blit(set_alarm_obj.sub_min, (set_alarm_obj.sub_min_x, set_alarm_obj.sub_min_y))
-
-        window.blit(set_alarm_obj.ampm_up, (set_alarm_obj.ampm_up_x, set_alarm_obj.ampm_up_y))
-        window.blit(set_alarm_obj.ampm_dw, (set_alarm_obj.ampm_dw_x, set_alarm_obj.ampm_dw_y))
-
-        set_alarm_hrs = set_alarm_obj.hrs_font.render("%02d" % set_alarm_obj.hrs, True, line, bg)
-        window.blit(set_alarm_hrs, set_alarm_obj.hrs_textRect)
-
-        colan_text = set_alarm_obj.colan_font.render(":", True, line, bg)
-        window.blit(colan_text, set_alarm_obj.colan_textRect)
-
-        set_alarm_min = set_alarm_obj.min_font.render("%02d" % set_alarm_obj.min, True, line, bg)
-        window.blit(set_alarm_min, set_alarm_obj.min_textRect)
-
-        set_alarm_ampm = set_alarm_obj.ampm_font.render(set_alarm_obj.ampm, True, line, bg)
-        window.blit(set_alarm_ampm, set_alarm_obj.ampm_textRect)
-
-        set_alarm_obj.set_button.draw(window, bg)
-        clock_button.draw(window, bg)
-        alarm_button.draw(window, bg)
-        stopwatch_button.draw(window, bg)
-        timer_button.draw(window, bg)
-
-        window.blit(alarm1.sw_image, (alarm1.sw_x, alarm1.sw_y))
-        window.blit(alarm2.sw_image, (alarm2.sw_x, alarm2.sw_y))
-        window.blit(alarm3.sw_image, (alarm3.sw_x, alarm3.sw_y))
-        window.blit(alarm4.sw_image, (alarm4.sw_x, alarm4.sw_y))
-        window.blit(alarm5.sw_image, (alarm5.sw_x, alarm5.sw_y))
-
-        alarm_str1 = alarm1.alarm_font.render("%02d:%02d %s" % (alarm1.hours, alarm1.minutes, alarm1.ampm), True, line,
-                                              bg)
-        window.blit(alarm_str1, alarm1.alarm_textRect)
-
-        alarm_str2 = alarm2.alarm_font.render("%02d:%02d %s" % (alarm2.hours, alarm2.minutes, alarm2.ampm), True, line,
-                                              bg)
-        window.blit(alarm_str2, alarm2.alarm_textRect)
-
-        alarm_str3 = alarm3.alarm_font.render("%02d:%02d %s" % (alarm3.hours, alarm3.minutes, alarm3.ampm), True, line,
-                                              bg)
-        window.blit(alarm_str3, alarm3.alarm_textRect)
-
-        alarm_str4 = alarm4.alarm_font.render("%02d:%02d %s" % (alarm4.hours, alarm4.minutes, alarm4.ampm), True, line,
-                                              bg)
-        window.blit(alarm_str4, alarm4.alarm_textRect)
-
-        alarm_str5 = alarm5.alarm_font.render("%02d:%02d %s" % (alarm5.hours, alarm5.minutes, alarm5.ampm), True, line,
-                                              bg)
-        window.blit(alarm_str5, alarm5.alarm_textRect)
-
-        window.blit(alarm1.rst_image, (alarm1.rst_x, alarm1.rst_y))
-        window.blit(alarm2.rst_image, (alarm2.rst_x, alarm2.rst_y))
-        window.blit(alarm3.rst_image, (alarm3.rst_x, alarm3.rst_y))
-        window.blit(alarm4.rst_image, (alarm4.rst_x, alarm4.rst_y))
-        window.blit(alarm5.rst_image, (alarm5.rst_x, alarm5.rst_y))
-
-        alarm1.comparison(sys_hrs, sys_min, ampm)
-        alarm2.comparison(sys_hrs, sys_min, ampm)
-        alarm3.comparison(sys_hrs, sys_min, ampm)
-        alarm4.comparison(sys_hrs, sys_min, ampm)
-        alarm5.comparison(sys_hrs, sys_min, ampm)
-
-        setting_img = pygame.image.load('images/setting.png')
-        setting_img.set_colorkey(white)
-        setting_x, setting_y = 550 - setting_img.get_width() // 2, 30 - setting_img.get_height() // 2
-        window.blit(setting_img, (setting_x, setting_y))
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            pos = pygame.mouse.get_pos()
-
-            if event.type == pygame.MOUSEMOTION:
-                if set_alarm_obj.set_button.isOver(pos):
-                    set_alarm_obj.set_button.color = (151, 147, 245)
-                else:
-                    set_alarm_obj.set_button.color = (200, 200, 200)
-
-                if clock_button.isOver(pos):
-                    clock_button.text_color = (151, 147, 245)
-                else:
-                    clock_button.text_color = (200, 200, 200)
-
-                if stopwatch_button.isOver(pos):
-                    stopwatch_button.text_color = (151, 147, 245)
-                else:
-                    stopwatch_button.text_color = (200, 200, 200)
-
-                if timer_button.isOver(pos):
-                    timer_button.text_color = (151, 147, 245)
-                else:
-                    timer_button.text_color = (200, 200, 200)
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                set_alarm_obj.action(set_alarm_obj.isOver(pos))
-                if set_alarm_obj.set_button.isOver(pos):
-                    set_alarm_trig()
-
-                if clock_button.isOver(pos):
-                    clock_window()
-                if stopwatch_button.isOver(pos):
-                    stopwatch_window()
-                if timer_button.isOver(pos):
-                    timer_window()
-
-                if alarm1.isOverSW(pos):
-                    alarm1.sw_clicked()
-
-                if alarm1.isOverRST(pos):
-                    reset('alarm1')
-
-                if alarm2.isOverSW(pos):
-                    alarm2.sw_clicked()
-
-                if alarm2.isOverRST(pos):
-                    reset('alarm2')
-
-                if alarm3.isOverSW(pos):
-                    alarm3.sw_clicked()
-
-                if alarm3.isOverRST(pos):
-                    reset('alarm3')
-
-                if alarm4.isOverSW(pos):
-                    alarm4.sw_clicked()
-
-                if alarm4.isOverRST(pos):
-                    reset('alarm4')
-
-                if alarm5.isOverSW(pos):
-                    alarm5.sw_clicked()
-
-                if alarm5.isOverRST(pos):
-                    reset('alarm5')
-
-                if pos[0] > setting_x and pos[0] < setting_x + setting_img.get_width():
-                    if pos[1] > setting_y and pos[1] < setting_y + setting_img.get_height():
-                        setting_window()
-
-        pygame.display.update()
-
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
 
 world_time = {
     "GMT": ["Greenwich MT       +00:00", +0],
@@ -1051,89 +898,9 @@ time_text = time_font.render('', True, green, bg)
 time_textRect = time_text.get_rect()
 time_textRect.center = ((width // 2) - 130, height - 200)
 
-
-def clock_window():
-    pygame.display.set_caption('Clock')  # Title of the window
-    run = True
-    while run:
-        pygame.time.delay(10)
-        window.fill(bg)
-        clock_button.text_color = (151, 147, 245)
-        time = datetime.datetime.now()
-        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
-        hrs_val, min_val, sec_val, after = get_time()
-
-        window.blit(frame, (width // 2 - frame.get_width() // 2, 250 - frame.get_height() // 2))
-
-        hrs_cpy = pygame.transform.rotate(hrs, -((hrs_val * 30) + (min_val / 2)))
-        window.blit(hrs_cpy, (width // 2 - hrs_cpy.get_width() // 2, 250 - hrs_cpy.get_height() // 2))
-
-        min_cpy = pygame.transform.rotate(min, -min_val * 6)
-        window.blit(min_cpy, (width // 2 - min_cpy.get_width() // 2, 250 - min_cpy.get_height() // 2))
-
-        sec_cpy = pygame.transform.rotate(sec, -sec_val * 6)
-        window.blit(sec_cpy, (width // 2 - sec_cpy.get_width() // 2, 250 - sec_cpy.get_height() // 2))
-
-        window.blit(center, (width // 2 - center.get_width() // 2, 250 - center.get_height() // 2))
-
-        zone_change_button.draw(window, bg)
-        clock_button.draw(window, bg)
-        alarm_button.draw(window, bg)
-        stopwatch_button.draw(window, bg)
-        timer_button.draw(window, bg)
-
-        zone_str = zone_font.render(formated_world_time[location], True, line, bg)
-        window.blit(zone_str, zone_textRect)
-
-        time_str = time_font.render("%02d:%02d:%02d %s" % (hrs_val, min_val, sec_val, after), True, line, bg)
-        window.blit(time_str, time_textRect)
-
-        alarm1.comparison(sys_hrs, sys_min, ampm)
-        alarm2.comparison(sys_hrs, sys_min, ampm)
-        alarm3.comparison(sys_hrs, sys_min, ampm)
-        alarm4.comparison(sys_hrs, sys_min, ampm)
-        alarm5.comparison(sys_hrs, sys_min, ampm)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            pos = pygame.mouse.get_pos()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if zone_change_button.isOver(pos):
-                    change_zone()
-                if alarm_button.isOver(pos):
-                    alarm_window()
-                if stopwatch_button.isOver(pos):
-                    stopwatch_window()
-                if timer_button.isOver(pos):
-                    timer_window()
-
-            if event.type == pygame.MOUSEMOTION:
-                if zone_change_button.isOver(pos):
-                    zone_change_button.color = (151, 147, 245)
-                else:
-                    zone_change_button.color = (200, 200, 200)
-
-                if alarm_button.isOver(pos):
-                    alarm_button.text_color = (151, 147, 245)
-                else:
-                    alarm_button.text_color = (200, 200, 200)
-
-                if stopwatch_button.isOver(pos):
-                    stopwatch_button.text_color = (151, 147, 245)
-                else:
-                    stopwatch_button.text_color = (200, 200, 200)
-
-                if timer_button.isOver(pos):
-                    timer_button.text_color = (151, 147, 245)
-                else:
-                    timer_button.text_color = (200, 200, 200)
-
-        pygame.display.flip()
-
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
 
 capture_button = button((200, 200, 200), (0, 0, 0), 30, 635, 150, 55, 'Capture ')
 capture_button.font_size = 35
@@ -1296,6 +1063,284 @@ s_caplsit = [cap1, cap2, cap3, cap4, cap5, cap6, cap7, cap8, cap9, cap10, cap11,
 s_position = [240, 290, 340, 390, 440, 490, 540]
 
 
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+
+
+def alarm_window():
+    pygame.display.set_caption('Alarm')
+    while True:
+        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
+        alarm_button.text_color = (151, 147, 245)
+        time = datetime.datetime.now()
+        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
+        window.fill(bg)
+
+        window.blit(set_alarm_obj.add_hr, (set_alarm_obj.add_hr_x, set_alarm_obj.add_hr_y))
+        window.blit(set_alarm_obj.sub_hr, (set_alarm_obj.sub_hr_x, set_alarm_obj.sub_hr_y))
+
+        window.blit(set_alarm_obj.add_min, (set_alarm_obj.add_min_x, set_alarm_obj.add_min_y))
+        window.blit(set_alarm_obj.sub_min, (set_alarm_obj.sub_min_x, set_alarm_obj.sub_min_y))
+
+        window.blit(set_alarm_obj.ampm_up, (set_alarm_obj.ampm_up_x, set_alarm_obj.ampm_up_y))
+        window.blit(set_alarm_obj.ampm_dw, (set_alarm_obj.ampm_dw_x, set_alarm_obj.ampm_dw_y))
+
+        set_alarm_hrs = set_alarm_obj.hrs_font.render("%02d" % set_alarm_obj.hrs, True, line, bg)
+        window.blit(set_alarm_hrs, set_alarm_obj.hrs_textRect)
+
+        colan_text = set_alarm_obj.colan_font.render(":", True, line, bg)
+        window.blit(colan_text, set_alarm_obj.colan_textRect)
+
+        set_alarm_min = set_alarm_obj.min_font.render("%02d" % set_alarm_obj.min, True, line, bg)
+        window.blit(set_alarm_min, set_alarm_obj.min_textRect)
+
+        set_alarm_ampm = set_alarm_obj.ampm_font.render(set_alarm_obj.ampm, True, line, bg)
+        window.blit(set_alarm_ampm, set_alarm_obj.ampm_textRect)
+
+        set_alarm_obj.set_button.draw(window, bg)
+        clock_button.draw(window, bg)
+        alarm_button.draw(window, bg)
+        stopwatch_button.draw(window, bg)
+        timer_button.draw(window, bg)
+
+        window.blit(alarm1.sw_image, (alarm1.sw_x, alarm1.sw_y))
+        window.blit(alarm2.sw_image, (alarm2.sw_x, alarm2.sw_y))
+        window.blit(alarm3.sw_image, (alarm3.sw_x, alarm3.sw_y))
+        window.blit(alarm4.sw_image, (alarm4.sw_x, alarm4.sw_y))
+        window.blit(alarm5.sw_image, (alarm5.sw_x, alarm5.sw_y))
+
+        alarm_str1 = alarm1.alarm_font.render("%02d:%02d %s" % (alarm1.hours, alarm1.minutes, alarm1.ampm), True, line,
+                                              bg)
+        window.blit(alarm_str1, alarm1.alarm_textRect)
+
+        alarm_str2 = alarm2.alarm_font.render("%02d:%02d %s" % (alarm2.hours, alarm2.minutes, alarm2.ampm), True, line,
+                                              bg)
+        window.blit(alarm_str2, alarm2.alarm_textRect)
+
+        alarm_str3 = alarm3.alarm_font.render("%02d:%02d %s" % (alarm3.hours, alarm3.minutes, alarm3.ampm), True, line,
+                                              bg)
+        window.blit(alarm_str3, alarm3.alarm_textRect)
+
+        alarm_str4 = alarm4.alarm_font.render("%02d:%02d %s" % (alarm4.hours, alarm4.minutes, alarm4.ampm), True, line,
+                                              bg)
+        window.blit(alarm_str4, alarm4.alarm_textRect)
+
+        alarm_str5 = alarm5.alarm_font.render("%02d:%02d %s" % (alarm5.hours, alarm5.minutes, alarm5.ampm), True, line,
+                                              bg)
+        window.blit(alarm_str5, alarm5.alarm_textRect)
+
+        window.blit(alarm1.rst_image, (alarm1.rst_x, alarm1.rst_y))
+        window.blit(alarm2.rst_image, (alarm2.rst_x, alarm2.rst_y))
+        window.blit(alarm3.rst_image, (alarm3.rst_x, alarm3.rst_y))
+        window.blit(alarm4.rst_image, (alarm4.rst_x, alarm4.rst_y))
+        window.blit(alarm5.rst_image, (alarm5.rst_x, alarm5.rst_y))
+
+        alarm1.comparison(sys_hrs, sys_min, ampm)
+        alarm2.comparison(sys_hrs, sys_min, ampm)
+        alarm3.comparison(sys_hrs, sys_min, ampm)
+        alarm4.comparison(sys_hrs, sys_min, ampm)
+        alarm5.comparison(sys_hrs, sys_min, ampm)
+
+        setting_img = pygame.image.load('images/setting.png')
+        setting_img.set_colorkey(white)
+        setting_x, setting_y = 550 - setting_img.get_width() // 2, 30 - setting_img.get_height() // 2
+        window.blit(setting_img, (setting_x, setting_y))
+
+        if s_stopwatch_run:
+            time = datetime.datetime.now()
+            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+            s_duration = s_timenow - s_start_time
+            s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
+            s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
+            s_min = (s_duration % 3600000000) // 60000000
+            if s_min == 60:
+                s_state = True
+            s_hrs = s_duration // 3600000000
+        elif not s_active_status:
+            pass
+        else:
+            time = datetime.datetime.now()
+            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+            s_resttime = s_timenow - s_start_time - s_duration
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            pos = pygame.mouse.get_pos()
+
+            if event.type == pygame.MOUSEMOTION:
+                if set_alarm_obj.set_button.isOver(pos):
+                    set_alarm_obj.set_button.color = (151, 147, 245)
+                else:
+                    set_alarm_obj.set_button.color = (200, 200, 200)
+
+                if clock_button.isOver(pos):
+                    clock_button.text_color = (151, 147, 245)
+                else:
+                    clock_button.text_color = (200, 200, 200)
+
+                if stopwatch_button.isOver(pos):
+                    stopwatch_button.text_color = (151, 147, 245)
+                else:
+                    stopwatch_button.text_color = (200, 200, 200)
+
+                if timer_button.isOver(pos):
+                    timer_button.text_color = (151, 147, 245)
+                else:
+                    timer_button.text_color = (200, 200, 200)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                set_alarm_obj.action(set_alarm_obj.isOver(pos))
+                if set_alarm_obj.set_button.isOver(pos):
+                    set_alarm_trig()
+
+                if clock_button.isOver(pos):
+                    clock_window()
+                if stopwatch_button.isOver(pos):
+                    stopwatch_window()
+                if timer_button.isOver(pos):
+                    timer_window()
+
+                if alarm1.isOverSW(pos):
+                    alarm1.sw_clicked()
+
+                if alarm1.isOverRST(pos):
+                    reset('alarm1')
+
+                if alarm2.isOverSW(pos):
+                    alarm2.sw_clicked()
+
+                if alarm2.isOverRST(pos):
+                    reset('alarm2')
+
+                if alarm3.isOverSW(pos):
+                    alarm3.sw_clicked()
+
+                if alarm3.isOverRST(pos):
+                    reset('alarm3')
+
+                if alarm4.isOverSW(pos):
+                    alarm4.sw_clicked()
+
+                if alarm4.isOverRST(pos):
+                    reset('alarm4')
+
+                if alarm5.isOverSW(pos):
+                    alarm5.sw_clicked()
+
+                if alarm5.isOverRST(pos):
+                    reset('alarm5')
+
+                if pos[0] > setting_x and pos[0] < setting_x + setting_img.get_width():
+                    if pos[1] > setting_y and pos[1] < setting_y + setting_img.get_height():
+                        setting_window()
+
+        pygame.display.update()
+
+
+def clock_window():
+    pygame.display.set_caption('Clock')  # Title of the window
+    run = True
+    while run:
+        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
+        pygame.time.delay(10)
+        window.fill(bg)
+        clock_button.text_color = (151, 147, 245)
+        time = datetime.datetime.now()
+        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
+        hrs_val, min_val, sec_val, after = get_time()
+
+        window.blit(frame, (width // 2 - frame.get_width() // 2, 250 - frame.get_height() // 2))
+
+        hrs_cpy = pygame.transform.rotate(hrs, -((hrs_val * 30) + (min_val / 2)))
+        window.blit(hrs_cpy, (width // 2 - hrs_cpy.get_width() // 2, 250 - hrs_cpy.get_height() // 2))
+
+        min_cpy = pygame.transform.rotate(min, -min_val * 6)
+        window.blit(min_cpy, (width // 2 - min_cpy.get_width() // 2, 250 - min_cpy.get_height() // 2))
+
+        sec_cpy = pygame.transform.rotate(sec, -sec_val * 6)
+        window.blit(sec_cpy, (width // 2 - sec_cpy.get_width() // 2, 250 - sec_cpy.get_height() // 2))
+
+        window.blit(center, (width // 2 - center.get_width() // 2, 250 - center.get_height() // 2))
+
+        zone_change_button.draw(window, bg)
+        clock_button.draw(window, bg)
+        alarm_button.draw(window, bg)
+        stopwatch_button.draw(window, bg)
+        timer_button.draw(window, bg)
+
+        zone_str = zone_font.render(formated_world_time[location], True, line, bg)
+        window.blit(zone_str, zone_textRect)
+
+        time_str = time_font.render("%02d:%02d:%02d %s" % (hrs_val, min_val, sec_val, after), True, line, bg)
+        window.blit(time_str, time_textRect)
+
+        alarm1.comparison(sys_hrs, sys_min, ampm)
+        alarm2.comparison(sys_hrs, sys_min, ampm)
+        alarm3.comparison(sys_hrs, sys_min, ampm)
+        alarm4.comparison(sys_hrs, sys_min, ampm)
+        alarm5.comparison(sys_hrs, sys_min, ampm)
+        if s_stopwatch_run:
+            time = datetime.datetime.now()
+            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+            s_duration = s_timenow - s_start_time
+            s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
+            s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
+            s_min = (s_duration % 3600000000) // 60000000
+            if s_min == 60:
+                s_state = True
+            s_hrs = s_duration // 3600000000
+        elif not s_active_status:
+            pass
+        else:
+            time = datetime.datetime.now()
+            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+            s_resttime = s_timenow - s_start_time - s_duration
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            pos = pygame.mouse.get_pos()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if zone_change_button.isOver(pos):
+                    change_zone()
+                if alarm_button.isOver(pos):
+                    alarm_window()
+                if stopwatch_button.isOver(pos):
+                    stopwatch_window()
+                if timer_button.isOver(pos):
+                    timer_window()
+
+            if event.type == pygame.MOUSEMOTION:
+                if zone_change_button.isOver(pos):
+                    zone_change_button.color = (151, 147, 245)
+                else:
+                    zone_change_button.color = (200, 200, 200)
+
+                if alarm_button.isOver(pos):
+                    alarm_button.text_color = (151, 147, 245)
+                else:
+                    alarm_button.text_color = (200, 200, 200)
+
+                if stopwatch_button.isOver(pos):
+                    stopwatch_button.text_color = (151, 147, 245)
+                else:
+                    stopwatch_button.text_color = (200, 200, 200)
+
+                if timer_button.isOver(pos):
+                    timer_button.text_color = (151, 147, 245)
+                else:
+                    timer_button.text_color = (200, 200, 200)
+
+        pygame.display.flip()
+
+
 def stopwatch_window():
     pygame.display.set_caption('Stop Watch')
     global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter
@@ -1334,6 +1379,19 @@ def stopwatch_window():
         global s_cap_count, s_start_time, s_resttime
         pos_counter = 0
         window.fill(bg)
+        stopwatch_button.text_color = (151, 147, 245)
+        time = datetime.datetime.now()
+        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
+        clock_button.draw(window, bg)
+        alarm_button.draw(window, bg)
+        stopwatch_button.draw(window, bg)
+        timer_button.draw(window, bg)
+
+        alarm1.comparison(sys_hrs, sys_min, ampm)
+        alarm2.comparison(sys_hrs, sys_min, ampm)
+        alarm3.comparison(sys_hrs, sys_min, ampm)
+        alarm4.comparison(sys_hrs, sys_min, ampm)
+        alarm5.comparison(sys_hrs, sys_min, ampm)
         if s_stopwatch_run:
             time = datetime.datetime.now()
             s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
@@ -1448,6 +1506,13 @@ def stopwatch_window():
                     if isOverStopwatch(pos) == 'down' and s_counter < 23:
                         s_counter += 1
 
+                if clock_button.isOver(pos):
+                    clock_window()
+                if alarm_button.isOver(pos):
+                    alarm_window()
+                if timer_button.isOver(pos):
+                    timer_window()
+
             if event.type == pygame.MOUSEMOTION:
                 if start_button.isOver(pos):
                     start_button.color = (151, 147, 245)
@@ -1469,6 +1534,21 @@ def stopwatch_window():
                 else:
                     state_button.text_color = (200, 200, 200)
 
+
+                if clock_button.isOver(pos):
+                    clock_button.text_color = (151, 147, 245)
+                else:
+                    clock_button.text_color = (200, 200, 200)
+
+                if alarm_button.isOver(pos):
+                    alarm_button.text_color = (151, 147, 245)
+                else:
+                    alarm_button.text_color = (200, 200, 200)
+
+                if timer_button.isOver(pos):
+                    timer_button.text_color = (151, 147, 245)
+                else:
+                    timer_button.text_color = (200, 200, 200)
         pygame.display.update()
 
 
@@ -1476,6 +1556,7 @@ def timer_window():
     pygame.display.set_caption('Timer')  # Title of the window
     run = True
     while run:
+        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
         pygame.time.delay(10)
         window.fill(bg)
         timer_button.text_color = (151, 147, 245)
@@ -1492,6 +1573,22 @@ def timer_window():
         alarm4.comparison(sys_hrs, sys_min, ampm)
         alarm5.comparison(sys_hrs, sys_min, ampm)
 
+        if s_stopwatch_run:
+            time = datetime.datetime.now()
+            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+            s_duration = s_timenow - s_start_time
+            s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
+            s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
+            s_min = (s_duration % 3600000000) // 60000000
+            if s_min == 60:
+                s_state = True
+            s_hrs = s_duration // 3600000000
+        elif not s_active_status:
+            pass
+        else:
+            time = datetime.datetime.now()
+            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+            s_resttime = s_timenow - s_start_time - s_duration
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
