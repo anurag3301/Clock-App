@@ -23,7 +23,17 @@ Features:
     e. A setting window is provided where you can select between 16 alarm tone and set snooz duration
     
     
-  3. Stopwatch : Workin on it
+  3. Stopwatch 
+  
+    a. You can start, pause, resume, and reset alarm.
+    
+    b. You can capture upto 30 snaps of the time.
+    
+    c. There are of 2 modes:
+        i. Split Mode
+        ii.Lap Mode
+    
+    d. Its completely dynamic, means the stopwatch will carry on workin if you switch to other modules ie. clock, alarm or timer
   
   
   4. Time : Workin on it
