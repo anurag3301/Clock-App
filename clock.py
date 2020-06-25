@@ -704,7 +704,7 @@ alarm5 = alarm(alarm_data['alarm5'][0], alarm_data['alarm5'][1], alarm_data['ala
 #######################################################################################################################
 #######################################################################################################################
 
-world_time = {
+c_world_time = {
     "GMT": ["Greenwich MT       +00:00", +0],
     "ECT": ["European CT         +01:00", +1.0],
     "EET": ["East Eur Time       +02:00", +2.0],
@@ -737,7 +737,7 @@ world_time = {
     "BET": ["Brazil ST                 -03:00", -3.0],
     "CAT": ["Central African        -01:00", -1.0],
 }
-formated_world_time = {
+c_formatted_world_time = {
     "GMT": "Greenwich MT +00:00",
     "ECT": "European CT  +01:00",
     "EET": "East Eur    +02:00",
@@ -770,15 +770,18 @@ formated_world_time = {
     "BET": "Brazil ST   -03:00",
     "CAT": "African ST   -01:00"
 }
-location = 'IST'
+c_location = 'IST'
 
 
 def get_time():
-    time = datetime.datetime.now()
-    sys_time = time.hour * 60 + time.minute
-    gmt_time = sys_time - (world_time['IST'][1] * 60)
-    temp_converted_time = gmt_time + ((world_time[location][1]) * 60)
+    time = datetime.datetime.now()  # Get current time
+    sys_time = time.hour * 60 + time.minute  # Convert current in hrs+min to min
+    gmt_time = sys_time - (c_world_time['IST'][1] * 60)  # Converting the time to GMT time
+    temp_converted_time = gmt_time + (
+                (c_world_time[c_location][1]) * 60)  # Convert the GMT time to the selected time zone
+    # The Converted time is stored in temporary variable because it can get more than 24 hrs and less than 0 hrs
 
+    # here we fix the above issue
     if temp_converted_time < 0:
         converted_time = temp_converted_time + 24 * 60
     elif temp_converted_time > 24 * 60:
@@ -786,52 +789,51 @@ def get_time():
     else:
         converted_time = temp_converted_time
 
-    convered_time_hrs, convered_time_min, convered_time_sec = int(converted_time / 60), int(
+    converted_time_hrs, converted_time_min, converted_time_sec = int(converted_time / 60), int(
         converted_time % 60), time.second
-    return convered_time_hrs if convered_time_hrs <= 12 else convered_time_hrs - 12, convered_time_min, convered_time_sec, "AM" if convered_time_hrs < 12 else "PM"
+    return converted_time_hrs if converted_time_hrs <= 12 else converted_time_hrs - 12, converted_time_min, converted_time_sec, "AM" if converted_time_hrs < 12 else "PM"
 
 
 def change_zone():
-    global root
     root = tk.Tk()
 
     def change_timezone(timezone):
-        global location
-        location = timezone
+        global c_location
+        c_location = timezone
         root.destroy()
 
     canvas = tk.Canvas(root, height=500, width=200)
-    GMT = tk.Button(canvas, text=world_time['GMT'][0], font=('verdana', 10), command=lambda: change_timezone('GMT'))
-    ECT = tk.Button(canvas, text=world_time['ECT'][0], font=('verdana', 10), command=lambda: change_timezone('ECT'))
-    EET = tk.Button(canvas, text=world_time['EET'][0], font=('verdana', 10), command=lambda: change_timezone('EET'))
-    ART = tk.Button(canvas, text=world_time['ART'][0], font=('verdana', 10), command=lambda: change_timezone('ART'))
-    EAT = tk.Button(canvas, text=world_time['EAT'][0], font=('verdana', 10), command=lambda: change_timezone('EAT'))
-    MET = tk.Button(canvas, text=world_time['MET'][0], font=('verdana', 10), command=lambda: change_timezone('MET'))
-    NET = tk.Button(canvas, text=world_time['NET'][0], font=('verdana', 10), command=lambda: change_timezone('NET'))
-    PLT = tk.Button(canvas, text=world_time['PLT'][0], font=('verdana', 10), command=lambda: change_timezone('PLT'))
-    IST = tk.Button(canvas, text=world_time['IST'][0], font=('verdana', 10), command=lambda: change_timezone('IST'))
-    BST = tk.Button(canvas, text=world_time['BST'][0], font=('verdana', 10), command=lambda: change_timezone('BST'))
-    VST = tk.Button(canvas, text=world_time['VST'][0], font=('verdana', 10), command=lambda: change_timezone('VST'))
-    CTT = tk.Button(canvas, text=world_time['CTT'][0], font=('verdana', 10), command=lambda: change_timezone('CTT'))
-    JST = tk.Button(canvas, text=world_time['JST'][0], font=('verdana', 10), command=lambda: change_timezone('JST'))
-    ACT = tk.Button(canvas, text=world_time['ACT'][0], font=('verdana', 10), command=lambda: change_timezone('ACT'))
-    AET = tk.Button(canvas, text=world_time['AET'][0], font=('verdana', 10), command=lambda: change_timezone('AET'))
-    SST = tk.Button(canvas, text=world_time['SST'][0], font=('verdana', 10), command=lambda: change_timezone('SST'))
-    NST = tk.Button(canvas, text=world_time['NST'][0], font=('verdana', 10), command=lambda: change_timezone('NST'))
-    MIT = tk.Button(canvas, text=world_time['MIT'][0], font=('verdana', 10), command=lambda: change_timezone('MIT'))
-    HST = tk.Button(canvas, text=world_time['HST'][0], font=('verdana', 10), command=lambda: change_timezone('HST'))
-    AST = tk.Button(canvas, text=world_time['AST'][0], font=('verdana', 10), command=lambda: change_timezone('AST'))
-    PST = tk.Button(canvas, text=world_time['PST'][0], font=('verdana', 10), command=lambda: change_timezone('PST'))
-    PNT = tk.Button(canvas, text=world_time['PNT'][0], font=('verdana', 10), command=lambda: change_timezone('PNT'))
-    MST = tk.Button(canvas, text=world_time['MST'][0], font=('verdana', 10), command=lambda: change_timezone('MST'))
-    CST = tk.Button(canvas, text=world_time['CST'][0], font=('verdana', 10), command=lambda: change_timezone('CST'))
-    EST = tk.Button(canvas, text=world_time['EST'][0], font=('verdana', 10), command=lambda: change_timezone('EST'))
-    IET = tk.Button(canvas, text=world_time['IET'][0], font=('verdana', 10), command=lambda: change_timezone('IET'))
-    PRT = tk.Button(canvas, text=world_time['PRT'][0], font=('verdana', 10), command=lambda: change_timezone('PRT'))
-    CNT = tk.Button(canvas, text=world_time['CNT'][0], font=('verdana', 10), command=lambda: change_timezone('CNT'))
-    AGT = tk.Button(canvas, text=world_time['AGT'][0], font=('verdana', 10), command=lambda: change_timezone('AGT'))
-    BET = tk.Button(canvas, text=world_time['BET'][0], font=('verdana', 10), command=lambda: change_timezone('BET'))
-    CAT = tk.Button(canvas, text=world_time['CAT'][0], font=('verdana', 10), command=lambda: change_timezone('CAT'))
+    GMT = tk.Button(canvas, text=c_world_time['GMT'][0], font=('verdana', 10), command=lambda: change_timezone('GMT'))
+    ECT = tk.Button(canvas, text=c_world_time['ECT'][0], font=('verdana', 10), command=lambda: change_timezone('ECT'))
+    EET = tk.Button(canvas, text=c_world_time['EET'][0], font=('verdana', 10), command=lambda: change_timezone('EET'))
+    ART = tk.Button(canvas, text=c_world_time['ART'][0], font=('verdana', 10), command=lambda: change_timezone('ART'))
+    EAT = tk.Button(canvas, text=c_world_time['EAT'][0], font=('verdana', 10), command=lambda: change_timezone('EAT'))
+    MET = tk.Button(canvas, text=c_world_time['MET'][0], font=('verdana', 10), command=lambda: change_timezone('MET'))
+    NET = tk.Button(canvas, text=c_world_time['NET'][0], font=('verdana', 10), command=lambda: change_timezone('NET'))
+    PLT = tk.Button(canvas, text=c_world_time['PLT'][0], font=('verdana', 10), command=lambda: change_timezone('PLT'))
+    IST = tk.Button(canvas, text=c_world_time['IST'][0], font=('verdana', 10), command=lambda: change_timezone('IST'))
+    BST = tk.Button(canvas, text=c_world_time['BST'][0], font=('verdana', 10), command=lambda: change_timezone('BST'))
+    VST = tk.Button(canvas, text=c_world_time['VST'][0], font=('verdana', 10), command=lambda: change_timezone('VST'))
+    CTT = tk.Button(canvas, text=c_world_time['CTT'][0], font=('verdana', 10), command=lambda: change_timezone('CTT'))
+    JST = tk.Button(canvas, text=c_world_time['JST'][0], font=('verdana', 10), command=lambda: change_timezone('JST'))
+    ACT = tk.Button(canvas, text=c_world_time['ACT'][0], font=('verdana', 10), command=lambda: change_timezone('ACT'))
+    AET = tk.Button(canvas, text=c_world_time['AET'][0], font=('verdana', 10), command=lambda: change_timezone('AET'))
+    SST = tk.Button(canvas, text=c_world_time['SST'][0], font=('verdana', 10), command=lambda: change_timezone('SST'))
+    NST = tk.Button(canvas, text=c_world_time['NST'][0], font=('verdana', 10), command=lambda: change_timezone('NST'))
+    MIT = tk.Button(canvas, text=c_world_time['MIT'][0], font=('verdana', 10), command=lambda: change_timezone('MIT'))
+    HST = tk.Button(canvas, text=c_world_time['HST'][0], font=('verdana', 10), command=lambda: change_timezone('HST'))
+    AST = tk.Button(canvas, text=c_world_time['AST'][0], font=('verdana', 10), command=lambda: change_timezone('AST'))
+    PST = tk.Button(canvas, text=c_world_time['PST'][0], font=('verdana', 10), command=lambda: change_timezone('PST'))
+    PNT = tk.Button(canvas, text=c_world_time['PNT'][0], font=('verdana', 10), command=lambda: change_timezone('PNT'))
+    MST = tk.Button(canvas, text=c_world_time['MST'][0], font=('verdana', 10), command=lambda: change_timezone('MST'))
+    CST = tk.Button(canvas, text=c_world_time['CST'][0], font=('verdana', 10), command=lambda: change_timezone('CST'))
+    EST = tk.Button(canvas, text=c_world_time['EST'][0], font=('verdana', 10), command=lambda: change_timezone('EST'))
+    IET = tk.Button(canvas, text=c_world_time['IET'][0], font=('verdana', 10), command=lambda: change_timezone('IET'))
+    PRT = tk.Button(canvas, text=c_world_time['PRT'][0], font=('verdana', 10), command=lambda: change_timezone('PRT'))
+    CNT = tk.Button(canvas, text=c_world_time['CNT'][0], font=('verdana', 10), command=lambda: change_timezone('CNT'))
+    AGT = tk.Button(canvas, text=c_world_time['AGT'][0], font=('verdana', 10), command=lambda: change_timezone('AGT'))
+    BET = tk.Button(canvas, text=c_world_time['BET'][0], font=('verdana', 10), command=lambda: change_timezone('BET'))
+    CAT = tk.Button(canvas, text=c_world_time['CAT'][0], font=('verdana', 10), command=lambda: change_timezone('CAT'))
 
     canvas.pack()
 
@@ -870,33 +872,33 @@ def change_zone():
     root.mainloop()
 
 
-frame = pygame.image.load('images/frame.png')
-frame.set_colorkey(bg)
+c_frame_img = pygame.image.load('images/frame.png')
+c_frame_img.set_colorkey(bg)
 
-center = pygame.image.load('images/center.png')
-center.set_colorkey(bg)
+c_center_img = pygame.image.load('images/center.png')
+c_center_img.set_colorkey(bg)
 
-min = pygame.image.load('images/min.png').convert()
-min.set_colorkey(white)
+c_min_hand_img = pygame.image.load('images/min.png').convert()
+c_min_hand_img.set_colorkey(white)
 
-hrs = pygame.image.load('images/hr.png').convert()
-hrs.set_colorkey(white)
+c_hrs_hand_img = pygame.image.load('images/hr.png').convert()
+c_hrs_hand_img.set_colorkey(white)
 
-sec = pygame.image.load('images/sec.png').convert()
-sec.set_colorkey(white)
+c_sec_hand_img = pygame.image.load('images/sec.png').convert()
+c_sec_hand_img.set_colorkey(white)
 
-zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 110), (height - 90), 250, 40,
-                            ' Change Time Zone ')
+c_zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 110), (height - 90), 250, 40,
+                              ' Change Time Zone ')
 
-zone_font = pygame.font.Font(verdana_font, 28)
-zone_text = zone_font.render('', True, green, bg)
-zone_textRect = zone_text.get_rect()
-zone_textRect.center = ((width // 2) - 122, height - 145)
+c_zone_font = pygame.font.Font(verdana_font, 28)
+c_zone_text = c_zone_font.render('', True, green, bg)
+c_zone_textRect = c_zone_text.get_rect()
+c_zone_textRect.center = ((width // 2) - 122, height - 145)
 
-time_font = pygame.font.Font(ubuntu_font, 50)
-time_text = time_font.render('', True, green, bg)
-time_textRect = time_text.get_rect()
-time_textRect.center = ((width // 2) - 130, height - 200)
+c_time_font = pygame.font.Font(ubuntu_font, 50)
+c_time_text = c_time_font.render('', True, green, bg)
+c_time_textRect = c_time_text.get_rect()
+c_time_textRect.center = ((width // 2) - 130, height - 200)
 
 #######################################################################################################################
 #######################################################################################################################
@@ -1058,8 +1060,8 @@ def isOverStopwatch(pos):
 s_run = True
 s_duration, s_milli, s_sec, s_min, s_hrs, s_cap_count, s_start_time, s_resttime, s_counter = 0, 0, 0, 0, 0, 0, 0, 0, 0
 s_stopwatch_run, s_active_status, s_state, s_spl_lap = False, False, False, True
-s_caplsit = [cap1, cap2, cap3, cap4, cap5, cap6, cap7, cap8, cap9, cap10, cap11, cap12, cap13, cap14, cap15, cap16,
-             cap17, cap18, cap19, cap20, cap21, cap22, cap23, cap24, cap25, cap26, cap27, cap28, cap29, cap30]
+s_cap_list = [cap1, cap2, cap3, cap4, cap5, cap6, cap7, cap8, cap9, cap10, cap11, cap12, cap13, cap14, cap15, cap16,
+              cap17, cap18, cap19, cap20, cap21, cap22, cap23, cap24, cap25, cap26, cap27, cap28, cap29, cap30]
 s_position = [240, 290, 340, 390, 440, 490, 540]
 
 
@@ -1246,37 +1248,12 @@ def clock_window():
     run = True
     while run:
         global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
-        pygame.time.delay(10)
         window.fill(bg)
         clock_button.text_color = (151, 147, 245)
+
         time = datetime.datetime.now()
         sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
         hrs_val, min_val, sec_val, after = get_time()
-
-        window.blit(frame, (width // 2 - frame.get_width() // 2, 250 - frame.get_height() // 2))
-
-        hrs_cpy = pygame.transform.rotate(hrs, -((hrs_val * 30) + (min_val / 2)))
-        window.blit(hrs_cpy, (width // 2 - hrs_cpy.get_width() // 2, 250 - hrs_cpy.get_height() // 2))
-
-        min_cpy = pygame.transform.rotate(min, -min_val * 6)
-        window.blit(min_cpy, (width // 2 - min_cpy.get_width() // 2, 250 - min_cpy.get_height() // 2))
-
-        sec_cpy = pygame.transform.rotate(sec, -sec_val * 6)
-        window.blit(sec_cpy, (width // 2 - sec_cpy.get_width() // 2, 250 - sec_cpy.get_height() // 2))
-
-        window.blit(center, (width // 2 - center.get_width() // 2, 250 - center.get_height() // 2))
-
-        zone_change_button.draw(window, bg)
-        clock_button.draw(window, bg)
-        alarm_button.draw(window, bg)
-        stopwatch_button.draw(window, bg)
-        timer_button.draw(window, bg)
-
-        zone_str = zone_font.render(formated_world_time[location], True, line, bg)
-        window.blit(zone_str, zone_textRect)
-
-        time_str = time_font.render("%02d:%02d:%02d %s" % (hrs_val, min_val, sec_val, after), True, line, bg)
-        window.blit(time_str, time_textRect)
 
         alarm1.comparison(sys_hrs, sys_min, ampm)
         alarm2.comparison(sys_hrs, sys_min, ampm)
@@ -1300,6 +1277,31 @@ def clock_window():
             s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
             s_resttime = s_timenow - s_start_time - s_duration
 
+        window.blit(c_frame_img, (width // 2 - c_frame_img.get_width() // 2, 250 - c_frame_img.get_height() // 2))
+
+        hrs_img_cpy = pygame.transform.rotate(c_hrs_hand_img, -((hrs_val * 30) + (min_val / 2)))
+        window.blit(hrs_img_cpy, (width // 2 - hrs_img_cpy.get_width() // 2, 250 - hrs_img_cpy.get_height() // 2))
+
+        min_img_cpy = pygame.transform.rotate(c_min_hand_img, -min_val * 6)
+        window.blit(min_img_cpy, (width // 2 - min_img_cpy.get_width() // 2, 250 - min_img_cpy.get_height() // 2))
+
+        sec_img_cpy = pygame.transform.rotate(c_sec_hand_img, -sec_val * 6)
+        window.blit(sec_img_cpy, (width // 2 - sec_img_cpy.get_width() // 2, 250 - sec_img_cpy.get_height() // 2))
+
+        window.blit(c_center_img, (width // 2 - c_center_img.get_width() // 2, 250 - c_center_img.get_height() // 2))
+
+        c_zone_change_button.draw(window, bg)
+        clock_button.draw(window, bg)
+        alarm_button.draw(window, bg)
+        stopwatch_button.draw(window, bg)
+        timer_button.draw(window, bg)
+
+        zone_str = c_zone_font.render(c_formatted_world_time[c_location], True, line, bg)
+        window.blit(zone_str, c_zone_textRect)
+
+        time_str = c_time_font.render("%02d:%02d:%02d %s" % (hrs_val, min_val, sec_val, after), True, line, bg)
+        window.blit(time_str, c_time_textRect)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -1308,7 +1310,7 @@ def clock_window():
             pos = pygame.mouse.get_pos()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if zone_change_button.isOver(pos):
+                if c_zone_change_button.isOver(pos):
                     change_zone()
                 if alarm_button.isOver(pos):
                     alarm_window()
@@ -1318,10 +1320,10 @@ def clock_window():
                     timer_window()
 
             if event.type == pygame.MOUSEMOTION:
-                if zone_change_button.isOver(pos):
-                    zone_change_button.color = (151, 147, 245)
+                if c_zone_change_button.isOver(pos):
+                    c_zone_change_button.color = (151, 147, 245)
                 else:
-                    zone_change_button.color = (200, 200, 200)
+                    c_zone_change_button.color = (200, 200, 200)
 
                 if alarm_button.isOver(pos):
                     alarm_button.text_color = (151, 147, 245)
@@ -1348,12 +1350,12 @@ def stopwatch_window():
     def capture():
         global s_cap_count, s_hrs, s_min, s_milli, s_sec, s_duration, s_counter, time, s_start_time
         if s_stopwatch_run and s_cap_count < 30:
-            s_caplsit[s_cap_count].sn_text = s_caplsit[s_cap_count].font3.render("%02d)" % s_caplsit[s_cap_count].sn,
-                                                                                 True, line, bg)
-            s_caplsit[s_cap_count].hrs_text = s_caplsit[s_cap_count].font0.render("%02d" % s_hrs, True, line, bg)
-            s_caplsit[s_cap_count].min_text = s_caplsit[s_cap_count].font0.render("%02d" % s_min, True, line, bg)
-            s_caplsit[s_cap_count].sec_text = s_caplsit[s_cap_count].font0.render("%02d" % s_sec, True, line, bg)
-            s_caplsit[s_cap_count].milli_text = s_caplsit[s_cap_count].font0.render("%02d" % s_milli, True, line, bg)
+            s_cap_list[s_cap_count].sn_text = s_cap_list[s_cap_count].font3.render("%02d)" % s_cap_list[s_cap_count].sn,
+                                                                                   True, line, bg)
+            s_cap_list[s_cap_count].hrs_text = s_cap_list[s_cap_count].font0.render("%02d" % s_hrs, True, line, bg)
+            s_cap_list[s_cap_count].min_text = s_cap_list[s_cap_count].font0.render("%02d" % s_min, True, line, bg)
+            s_cap_list[s_cap_count].sec_text = s_cap_list[s_cap_count].font0.render("%02d" % s_sec, True, line, bg)
+            s_cap_list[s_cap_count].milli_text = s_cap_list[s_cap_count].font0.render("%02d" % s_milli, True, line, bg)
             s_cap_count += 1
             if s_cap_count > 7:
                 s_counter = s_cap_count - 7
@@ -1368,7 +1370,7 @@ def stopwatch_window():
         global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_cap_count, s_counter, s_resttime, s_start_time
         s_duration, s_sec, s_min, s_milli, s_hrs, s_cap_count, s_counter, s_resttime, s_start_time = 0, 0, 0, 0, 0, 0, 0, 0, 0
         s_stopwatch_run, s_active_status, s_state = False, False, False
-        for i in s_caplsit:
+        for i in s_cap_list:
             i.sn_text = i.font3.render("%02d)" % i.sn, True, line, bg)
             i.hrs_text = i.font0.render("%02d" % s_hrs, True, line, bg)
             i.min_text = i.font0.render("%02d" % s_min, True, line, bg)
@@ -1452,13 +1454,13 @@ def stopwatch_window():
             window.blit(up, up_cord)
             window.blit(down, down_cord)
             for i in range(s_counter, s_counter + 7):
-                s_caplsit[i].recenter(s_position[pos_counter])
-                s_caplsit[i].build()
+                s_cap_list[i].recenter(s_position[pos_counter])
+                s_cap_list[i].build()
                 pos_counter += 1
         else:
             for i in range(s_cap_count):
-                s_caplsit[i].recenter(s_position[i])
-                s_caplsit[i].build()
+                s_cap_list[i].recenter(s_position[i])
+                s_cap_list[i].build()
 
         if s_spl_lap:
             state_button.text = ' SPLIT '
@@ -1533,7 +1535,6 @@ def stopwatch_window():
                     state_button.text_color = (151, 147, 245)
                 else:
                     state_button.text_color = (200, 200, 200)
-
 
                 if clock_button.isOver(pos):
                     clock_button.text_color = (151, 147, 245)
