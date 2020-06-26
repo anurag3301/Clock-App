@@ -49,49 +49,60 @@ class button:
 
         return False
 
+
 clock_button = button(bg, (200, 200, 200), 5, 0, 70, 30, ' Clock ')
 alarm_button = button(bg, (200, 200, 200), 93, 0, 70, 30, ' Alarm ')
 stopwatch_button = button(bg, (200, 200, 200), 188, 0, 130, 30, ' Stop Watch ')
 timer_button = button(bg, (200, 200, 200), 335, 0, 70, 30, ' Timer ')
 
 
-
-
-
-
-
 class alarm:
     def __init__(self, hours, minutes, ampm, isActive, y):
+        # Some alarm state variable
         self.hours = hours
         self.minutes = minutes
         self.ampm = ampm
         self.isActive = isActive
+
+        # Importing the alarm on and off images
         self.on_sw_image = pygame.image.load('images/swon.png')
         self.on_sw_image.set_colorkey(white)
         self.off_sw_image = pygame.image.load('images/swoff.png')
         self.off_sw_image.set_colorkey(white)
-        self.sw_image = self.on_sw_image if self.isActive else self.off_sw_image
-        self.sw_x = 80 - self.sw_image.get_width() // 2
+        self.sw_image = self.on_sw_image if self.isActive else self.off_sw_image  # selecting the image based in the state
+        self.sw_x = 80 - self.sw_image.get_width() // 2  # dimension for the switch image
         self.sw_y = y - self.sw_image.get_height() // 2
+
+        # importing the delete image and defining the coordinate
         self.rst_image = pygame.image.load('images/bin.png')
         self.rst_image.set_colorkey(white)
         self.rst_x = width - 70 - self.rst_image.get_width() // 2
         self.rst_y = y - self.rst_image.get_height() // 2
+
+        # defining the property of the alarm label
         self.alarm_font = pygame.font.Font(ubuntu_font, 50)
         self.alarm_text = self.alarm_font.render('', True, green, bg)
         self.alarm_textRect = self.alarm_text.get_rect()
         self.alarm_textRect.center = 200 - self.alarm_text.get_width() // 2, y + 25 - self.alarm_text.get_height() // 2
 
     def ring_alarm(self, tone):
-        def snooz(snooz_time):
-            snooz_hrs = snooz_time // 60
-            snooz_min = snooz_time % 60
-            if snooz_min + self.minutes > 60:
-                self.minutes += snooz_min - 60
-                self.hours += 1
 
-            if snooz_hrs + self.hours > 12:
-                self.hours += snooz_hrs - 12
+        # when the snooz button is pressed this function is called
+        def snooz(snooze_time):
+            # here the argument snooze_time is in min so we have to convert it to hrs and min
+            snooze_hrs = snooze_time // 60
+            snooze_min = snooze_time % 60
+
+            # if the current minute plus the snooze_min exceed 60 then it is incremented by more then an hour, then do follow
+            if snooze_min + self.minutes > 60:
+                self.minutes += snooze_min - 60
+                self.hours += 1
+            else:
+                self.minutes += snooze_min
+
+            # if the current hour plus the snooze hour exceeds 12 mean there is change in AM and PM
+            if snooze_hrs + self.hours > 12:
+                self.hours += snooze_hrs - 12
                 if self.ampm == 'AM':
                     self.ampm = 'PM'
                 else:
@@ -99,47 +110,48 @@ class alarm:
 
             self.isActive = True
             self.sw_image = self.on_sw_image if self.isActive else self.off_sw_image
-            root.destroy()
+            alarm_ring_win.destroy()
 
-        def quit():
-            root.destroy()
+            # After snoozing update the data
+            alarm_data = {
+                "alarm1": [alarm1.hours, alarm1.minutes, alarm1.ampm, alarm1.isActive],
+                "alarm2": [alarm2.hours, alarm2.minutes, alarm2.ampm, alarm2.isActive],
+                "alarm3": [alarm3.hours, alarm3.minutes, alarm3.ampm, alarm3.isActive],
+                "alarm4": [alarm4.hours, alarm4.minutes, alarm4.ampm, alarm4.isActive],
+                "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
+            }
+            pickle_out = open("data/alarm_data.pickle", "wb")
+            pickle.dump(alarm_data, pickle_out)
+            pickle_out.close()
 
-        root = tk.Tk()
-        root.geometry("300x250+700+100")
+        pygame.mixer.Sound.play(tone)  # play the tone
+        alarm_ring_win = tk.Tk()  # create the ring window
+        alarm_ring_win.geometry("300x250+700+100")  # place the window
 
-        pygame.mixer.Sound.play(tone)
+        # fetch the snooze time
         pickle_in = open("data/alarm_prop.pickle", "rb")
         alarm_prop = pickle.load(pickle_in)
         pickle_in.close()
-        snooz_time = alarm_prop['snooz_time']
-        canvas = tk.Canvas(root, height=250, width=300, bg='#282828')
+        snooze_time = alarm_prop['snooz_time']
+
+        # tkinter stuffs
+        canvas = tk.Canvas(alarm_ring_win, height=250, width=300, bg='#282828')
         alarm_label = tk.Label(canvas, text="ALARM", font=('ubuntu', 60), bg='#282828', fg='#C8E6FF')
         time_label = tk.Label(canvas, text="%02d:%02d %s" % (self.hours, self.minutes, self.ampm), font=('ubuntu', 40),
                               bg='#282828', fg='#C8E6FF')
-        snooz_button = tk.Button(canvas, text="Snooz %d min" % (snooz_time), font=('verdana', 15),
-                                 activebackground="#666699",
-                                 bg='#9793F5', command=lambda: snooz(snooz_time))
+        snooze_button = tk.Button(canvas, text="Snooze %d min" % snooze_time, font=('verdana', 15),
+                                  activebackground="#666699",
+                                  bg='#9793F5', command=lambda: snooz(snooze_time))
         close_button = tk.Button(canvas, text="Close", font=('verdana', 15), activebackground="#666699", bg='#9793F5',
-                                 command=lambda: quit())
+                                 command=lambda: alarm_ring_win.destroy())
         canvas.pack()
         alarm_label.place(y=1, x=15)
         time_label.place(y=100, x=35)
-        snooz_button.place(y=190, x=10)
+        snooze_button.place(y=190, x=10)
         close_button.place(y=190, x=200)
-        root.mainloop()
+
+        alarm_ring_win.mainloop()
         pygame.mixer.Sound.stop(tone)
-
-        alarm_data = {
-            "alarm1": [alarm1.hours, alarm1.minutes, alarm1.ampm, alarm1.isActive],
-            "alarm2": [alarm2.hours, alarm2.minutes, alarm2.ampm, alarm2.isActive],
-            "alarm3": [alarm3.hours, alarm3.minutes, alarm3.ampm, alarm3.isActive],
-            "alarm4": [alarm4.hours, alarm4.minutes, alarm4.ampm, alarm4.isActive],
-            "alarm5": [alarm5.hours, alarm5.minutes, alarm5.ampm, alarm5.isActive],
-        }
-
-        pickle_out = open("data/alarm_data.pickle", "wb")
-        pickle.dump(alarm_data, pickle_out)
-        pickle_out.close()
 
     def comparison(self, sys_hrs, sys_min, sys_ampn):
         if self.hours == sys_hrs and self.minutes == sys_min and self.ampm == sys_ampn and self.isActive:
@@ -149,7 +161,7 @@ class alarm:
 
     def isOverSW(self, pos):
         if self.sw_x < pos[0] < self.sw_x + self.sw_image.get_width():
-            if pos[1] > self.sw_y and pos[1] < self.sw_y + self.sw_image.get_height():
+            if self.sw_y < pos[1] < self.sw_y + self.sw_image.get_height():
                 return True
         return False
 
@@ -175,17 +187,20 @@ class alarm:
                 return True
         return False
 
+
+# fech alarm data for the beginning
 pickle_in = open("data/alarm_data.pickle", "rb")
 alarm_data = pickle.load(pickle_in)
 pickle_in.close()
 
+# Create alarm object and define data to them
 alarm1 = alarm(alarm_data['alarm1'][0], alarm_data['alarm1'][1], alarm_data['alarm1'][2], alarm_data['alarm1'][3], 290)
 alarm2 = alarm(alarm_data['alarm2'][0], alarm_data['alarm2'][1], alarm_data['alarm2'][2], alarm_data['alarm2'][3], 380)
 alarm3 = alarm(alarm_data['alarm3'][0], alarm_data['alarm3'][1], alarm_data['alarm3'][2], alarm_data['alarm3'][3], 470)
 alarm4 = alarm(alarm_data['alarm4'][0], alarm_data['alarm4'][1], alarm_data['alarm4'][2], alarm_data['alarm4'][3], 560)
 alarm5 = alarm(alarm_data['alarm5'][0], alarm_data['alarm5'][1], alarm_data['alarm5'][2], alarm_data['alarm5'][3], 650)
 
-alarm_list = [alarm1, alarm2, alarm3, alarm4, alarm5]
+alarm_list = [alarm1, alarm2, alarm3, alarm4, alarm5]   # list for alarm object
 
 
 def tone_return(sno):
@@ -235,6 +250,7 @@ def setting_window():
     canvas = tk.Canvas(root, height=500, width=400, bg='#282828')
     tone_number = tk.IntVar(canvas, alarm_prop['tone_number'])
     snooz_val = tk.IntVar(canvas, value=alarm_prop['snooz_time'])
+
     x = 50
 
     class tone:
@@ -344,9 +360,10 @@ def setting_window():
     for i in tone_list:
         pygame.mixer.Sound.stop(i.tone)
 
+
 def set_alarm_trig():
     for i in alarm_list:
-        if i.hours == 0 and i.minutes == 0  and i.ampm == 'AM':
+        if i.hours == 0 and i.minutes == 0 and i.ampm == 'AM':
             i.hours = set_alarm_obj.hrs
             i.minutes = set_alarm_obj.min
             i.ampm = set_alarm_obj.ampm
@@ -369,29 +386,28 @@ def set_alarm_trig():
 
 def reset(alarm_name):
     if alarm_name == 'alarm1':
-        for i in range(len(alarm_list)-1):
-            alarm_list[i].hours = alarm_list[i+1].hours
-            alarm_list[i].minutes = alarm_list[i+1].minutes
-            alarm_list[i].ampm = alarm_list[i+1].ampm
+        for i in range(len(alarm_list) - 1):
+            alarm_list[i].hours = alarm_list[i + 1].hours
+            alarm_list[i].minutes = alarm_list[i + 1].minutes
+            alarm_list[i].ampm = alarm_list[i + 1].ampm
 
     elif alarm_name == 'alarm2':
-        for i in range(1, len(alarm_list)-1):
-            alarm_list[i].hours = alarm_list[i+1].hours
-            alarm_list[i].minutes = alarm_list[i+1].minutes
-            alarm_list[i].ampm = alarm_list[i+1].ampm
+        for i in range(1, len(alarm_list) - 1):
+            alarm_list[i].hours = alarm_list[i + 1].hours
+            alarm_list[i].minutes = alarm_list[i + 1].minutes
+            alarm_list[i].ampm = alarm_list[i + 1].ampm
 
     elif alarm_name == 'alarm3':
-        for i in range(2, len(alarm_list)-1):
-            alarm_list[i].hours = alarm_list[i+1].hours
-            alarm_list[i].minutes = alarm_list[i+1].minutes
-            alarm_list[i].ampm = alarm_list[i+1].ampm
+        for i in range(2, len(alarm_list) - 1):
+            alarm_list[i].hours = alarm_list[i + 1].hours
+            alarm_list[i].minutes = alarm_list[i + 1].minutes
+            alarm_list[i].ampm = alarm_list[i + 1].ampm
 
     elif alarm_name == 'alarm4':
-        for i in range(3, len(alarm_list)-1):
-            alarm_list[i].hours = alarm_list[i+1].hours
-            alarm_list[i].minutes = alarm_list[i+1].minutes
-            alarm_list[i].ampm = alarm_list[i+1].ampm
-
+        for i in range(3, len(alarm_list) - 1):
+            alarm_list[i].hours = alarm_list[i + 1].hours
+            alarm_list[i].minutes = alarm_list[i + 1].minutes
+            alarm_list[i].ampm = alarm_list[i + 1].ampm
 
     alarm5.hours = 0
     alarm5.minutes = 0
@@ -402,7 +418,6 @@ def reset(alarm_name):
             i.isActive = False
 
         i.sw_image = i.on_sw_image if i.isActive else i.off_sw_image
-
 
     alarm_data = {
         "alarm1": [alarm1.hours, alarm1.minutes, alarm1.ampm, alarm1.isActive],
@@ -525,13 +540,10 @@ class set_alarm:
                 return 'ampm_dw'
 
 
-
-
 time = datetime.datetime.now()
 sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
 
 set_alarm_obj = set_alarm(80, sys_hrs, sys_min, ampm)
-
 
 
 def alarm_window():
@@ -602,11 +614,8 @@ def alarm_window():
         window.blit(alarm4.rst_image, (alarm4.rst_x, alarm4.rst_y))
         window.blit(alarm5.rst_image, (alarm5.rst_x, alarm5.rst_y))
 
-        alarm1.comparison(sys_hrs, sys_min, ampm)
-        alarm2.comparison(sys_hrs, sys_min, ampm)
-        alarm3.comparison(sys_hrs, sys_min, ampm)
-        alarm4.comparison(sys_hrs, sys_min, ampm)
-        alarm5.comparison(sys_hrs, sys_min, ampm)
+        for i in alarm_list:
+            i.comparison(sys_hrs, sys_min, ampm)
 
         setting_img = pygame.image.load('images/setting.png')
         setting_img.set_colorkey(white)
