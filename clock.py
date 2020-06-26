@@ -913,15 +913,43 @@ s_position = [240, 290, 340, 390, 440, 490, 540]
 #######################################################################################################################
 #######################################################################################################################
 
+def update():
+    global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
+
+    time = datetime.datetime.now()
+    sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
+
+    for i in alarm_list:
+        i.comparison(sys_hrs, sys_min, ampm)
+
+    if s_stopwatch_run:
+        time = datetime.datetime.now()
+        s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+        s_duration = s_timenow - s_start_time
+        s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
+        s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
+        s_min = (s_duration % 3600000000) // 60000000
+        if s_min == 60:
+            s_state = True
+        s_hrs = s_duration // 3600000000
+    elif not s_active_status:
+        pass
+    else:
+        time = datetime.datetime.now()
+        s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
+        s_resttime = s_timenow - s_start_time - s_duration
+
+    clock_button.draw(window, bg)
+    alarm_button.draw(window, bg)
+    stopwatch_button.draw(window, bg)
+    timer_button.draw(window, bg)
 
 def alarm_window():
     pygame.display.set_caption('Alarm')
     while True:
-        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
         alarm_button.text_color = (151, 147, 245)
-        time = datetime.datetime.now()
-        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
         window.fill(bg)
+        update()
 
         window.blit(set_alarm_obj.add_hr, (set_alarm_obj.add_hr_x, set_alarm_obj.add_hr_y))
         window.blit(set_alarm_obj.sub_hr, (set_alarm_obj.sub_hr_x, set_alarm_obj.sub_hr_y))
@@ -945,10 +973,6 @@ def alarm_window():
         window.blit(set_alarm_ampm, set_alarm_obj.ampm_textRect)
 
         set_alarm_obj.set_button.draw(window, bg)
-        clock_button.draw(window, bg)
-        alarm_button.draw(window, bg)
-        stopwatch_button.draw(window, bg)
-        timer_button.draw(window, bg)
 
         window.blit(alarm1.sw_image, (alarm1.sw_x, alarm1.sw_y))
         window.blit(alarm2.sw_image, (alarm2.sw_x, alarm2.sw_y))
@@ -982,30 +1006,12 @@ def alarm_window():
         window.blit(alarm4.rst_image, (alarm4.rst_x, alarm4.rst_y))
         window.blit(alarm5.rst_image, (alarm5.rst_x, alarm5.rst_y))
 
-        for i in alarm_list:
-            i.comparison(sys_hrs, sys_min, ampm)
 
         setting_img = pygame.image.load('images/setting.png')
         setting_img.set_colorkey(white)
         setting_x, setting_y = 550 - setting_img.get_width() // 2, 30 - setting_img.get_height() // 2
         window.blit(setting_img, (setting_x, setting_y))
 
-        if s_stopwatch_run:
-            time = datetime.datetime.now()
-            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
-            s_duration = s_timenow - s_start_time
-            s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
-            s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
-            s_min = (s_duration % 3600000000) // 60000000
-            if s_min == 60:
-                s_state = True
-            s_hrs = s_duration // 3600000000
-        elif not s_active_status:
-            pass
-        else:
-            time = datetime.datetime.now()
-            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
-            s_resttime = s_timenow - s_start_time - s_duration
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1088,33 +1094,10 @@ def clock_window():
     pygame.display.set_caption('Clock')  # Title of the window
     run = True
     while run:
-        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
         window.fill(bg)
         clock_button.text_color = (151, 147, 245)
-
-        time = datetime.datetime.now()
-        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
+        update()
         hrs_val, min_val, sec_val, after = get_time()
-
-        for i in alarm_list:
-            i.comparison(sys_hrs, sys_min, ampm)
-
-        if s_stopwatch_run:
-            time = datetime.datetime.now()
-            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
-            s_duration = s_timenow - s_start_time
-            s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
-            s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
-            s_min = (s_duration % 3600000000) // 60000000
-            if s_min == 60:
-                s_state = True
-            s_hrs = s_duration // 3600000000
-        elif not s_active_status:
-            pass
-        else:
-            time = datetime.datetime.now()
-            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
-            s_resttime = s_timenow - s_start_time - s_duration
 
         window.blit(c_frame_img, (width // 2 - c_frame_img.get_width() // 2, 250 - c_frame_img.get_height() // 2))
 
@@ -1130,10 +1113,6 @@ def clock_window():
         window.blit(c_center_img, (width // 2 - c_center_img.get_width() // 2, 250 - c_center_img.get_height() // 2))
 
         c_zone_change_button.draw(window, bg)
-        clock_button.draw(window, bg)
-        alarm_button.draw(window, bg)
-        stopwatch_button.draw(window, bg)
-        timer_button.draw(window, bg)
 
         zone_str = c_zone_font.render(c_formatted_world_time[c_location], True, line, bg)
         window.blit(zone_str, c_zone_textRect)
@@ -1393,36 +1372,10 @@ def timer_window():
     pygame.display.set_caption('Timer')  # Title of the window
     run = True
     while run:
-        global s_hrs, s_min, s_milli, s_sec, s_duration, s_stopwatch_run, s_active_status, s_state, s_spl_lap, s_counter, s_cap_count, s_start_time, s_resttime, time
-        pygame.time.delay(10)
         window.fill(bg)
         timer_button.text_color = (151, 147, 245)
-        time = datetime.datetime.now()
-        sys_hrs, sys_min, ampm = time.hour if time.hour <= 12 else time.hour - 12, time.minute, 'AM' if time.hour < 12 else 'PM'
-        clock_button.draw(window, bg)
-        alarm_button.draw(window, bg)
-        stopwatch_button.draw(window, bg)
-        timer_button.draw(window, bg)
+        update()
 
-        for i in alarm_list:
-            i.comparison(sys_hrs, sys_min, ampm)
-
-        if s_stopwatch_run:
-            time = datetime.datetime.now()
-            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
-            s_duration = s_timenow - s_start_time
-            s_milli = (((s_duration % 3600000000) % 60000000) % 1000000) // 10000
-            s_sec = ((s_duration % 3600000000) % 60000000) // 1000000
-            s_min = (s_duration % 3600000000) // 60000000
-            if s_min == 60:
-                s_state = True
-            s_hrs = s_duration // 3600000000
-        elif not s_active_status:
-            pass
-        else:
-            time = datetime.datetime.now()
-            s_timenow = time.hour * 3600000000 + time.minute * 60000000 + time.second * 1000000 + time.microsecond
-            s_resttime = s_timenow - s_start_time - s_duration
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
