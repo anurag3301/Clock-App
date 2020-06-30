@@ -723,13 +723,13 @@ c_center_img = pygame.image.load('images/center.png')
 c_center_img.set_colorkey(bg)
 
 c_min_hand_img = pygame.image.load('images/min.png').convert()
-c_min_hand_img.set_colorkey(white)
+c_min_hand_img.set_colorkey(black)
 
 c_hrs_hand_img = pygame.image.load('images/hr.png').convert()
-c_hrs_hand_img.set_colorkey(white)
+c_hrs_hand_img.set_colorkey(black)
 
 c_sec_hand_img = pygame.image.load('images/sec.png').convert()
-c_sec_hand_img.set_colorkey(white)
+c_sec_hand_img.set_colorkey(black)
 
 c_zone_change_button = button((200, 200, 200), (0, 0, 0), ((width // 2) - 110), (height - 90), 250, 40,
                               ' Change Time Zone ')

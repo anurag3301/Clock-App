@@ -55,12 +55,15 @@ alarm_button = button(bg, (200, 200, 200), 93, 0, 70, 30, ' Alarm ')
 stopwatch_button = button(bg, (200, 200, 200), 188, 0, 130, 30, ' Stop Watch ')
 timer_button = button(bg, (200, 200, 200), 335, 0, 70, 30, ' Timer ')
 
+t_frame_img = pygame.image.load('images/frame timer.png')
+t_frame_img.set_colorkey(bg)
 
 def timer_window():
     pygame.display.set_caption('Timer')
     while True:
         timer_button.text_color = (151, 147, 245)
         window.fill((bg))
+        window.blit(t_frame_img, (width // 2 - t_frame_img.get_width() // 2, 250 - t_frame_img.get_height() // 2))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
