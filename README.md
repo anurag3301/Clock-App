@@ -1,7 +1,10 @@
 # Clock App
 Workin on a Full Fledged GUI Clock Program.
+
 Dependencies: `pygame, tkinter`
+
 Run `clock.py`
+
 Features:
   1. Clock
   
